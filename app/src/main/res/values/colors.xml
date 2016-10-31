@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="grid_background">#03a9f4</color>
+
+    <!--common colors-->
+    <color name="text_primary_light">#ffffffff</color>
+    <color name="dark_theme_primary_dark">#ff292929</color>
+    <color name="dark_theme_primary">#ff676767</color> <!-- this is blended with immersive_bars to produce the desired status bar color i.e. background_super_dark -->
+    <color name="dark_theme_accent">#40808080</color>
+    <color name="status_bar_back">#ff676767</color>
+    <color name="immersive_bars">#99000000</color>
+    <color name="background_dark">#ff333333</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="app_compat_light_text">#6d6d6d</color>
+    <color name="app_compat_light_hint">#a6a6a6</color>
+    <color name="black_87_title">#DE000000</color>
+
+
+    <!--ButtonColors for < 5.0-->
+    <color name="PRESSED_STATE_COLOR">#ffd180</color>
+    <color name="FOCUSED_STATE_COLOR">#F50056</color>
+    <color name="NORMAL_STATE_COLOR">#f57c00</color>
+</resources>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Bei Recipes</string>
+
+    <!--RecipeActivity-->
+    <string name="edit_text_quantity">Quantity</string>
+    <string name="text_view_ingredient_name">Name</string>
+    <string name="text_view_ingredient_count">Count</string>
+    <string name="text_view_ingredient_unit">Unit</string>
+    <string name="text_view_ingredient_proportion">Prop. Count</string>
+    <string name="button_ok">OK</string>
+
+    <!--RecipeActivity Menu-->
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+
+    <!--EditRecipe Activity-->
+    <string name="text_view_recipe_edit_title">Title</string>
+    <string name="hint_recipe_edit_title_hint">Enter Title</string>
+    <string name="text_view_recipe_edit_ingredients_title">Ingredients</string>
+    <string name="button_recipe_edit_add_ingredient">Add Ingredient</string>
+    <string name="button_recipe_edit_save">Save</string>
+    <string name="button_recipe_edit_up_arrow">↑</string>
+
+</resources>

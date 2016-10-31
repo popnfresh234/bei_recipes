@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.dmtaiwan.alexander.beirecipes.ui.views.FourThreeLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:background="@color/grid_background"
+    android:orientation="vertical"
+    android:theme="@style/DarkOverlay">
+
+    <com.dmtaiwan.alexander.beirecipes.ui.views.BaselineGridTextView
+        android:id="@+id/holder_recipe_name"
+        style="@style/TextAppearance.GridPrimary"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/padding_normal"
+        android:layout_marginStart="@dimen/padding_normal"
+        android:layout_marginTop="@dimen/padding_normal"
+        android:breakStrategy="simple"
+        android:ellipsize="end"
+        app:maxLinesByHeight="true"
+        tools:text="Amazing designer news story"/>
+
+    <ImageView
+        android:id="@+id/holder_recipe_thumb"
+        android:adjustViewBounds="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</com.dmtaiwan.alexander.beirecipes.ui.views.FourThreeLinearLayout>
