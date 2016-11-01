@@ -16,7 +16,7 @@
     </style>
 
     <style name="BeiRecipe.RecipeAcivity" parent="BeiRecipe">
-        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:windowBackground">@color/dark_theme_primary_dark</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
