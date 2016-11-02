@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.dmtaiwan.alexander.beirecipes.R;
-import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
+import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.MainAdapter;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
@@ -21,7 +21,6 @@ import com.dmtaiwan.alexander.beirecipes.util.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindInt;
 import butterknife.BindView;
@@ -101,37 +100,12 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
             }
         });
 
-        //Dummy recipe data
-        List<Recipe> recipeList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            Recipe recipe = Recipe.newRecipe("This is recipe #" + String.valueOf(i));
-
-            //Dummy ingredient data
-            List<Ingredient> ingredients = new ArrayList<>();
-            for (int j = 0; j < 6; j++) {
-                Ingredient ingredient = new Ingredient();
-                ingredient.setName("Ingredient #" + String.valueOf(j));
-                double start = 0;
-                double end = 100;
-                double random = new Random().nextDouble();
-                double result = start + (random * (end - start));
-                ingredient.setCount(result);
-                ingredient.setUnit("mg");
-                ingredient.setProportionalCount(0);
-                ingredients.add(ingredient);
-            }
-            recipe.setIngredients(ingredients);
-            //End dummy ingredient data
-
-            recipeList.add(recipe);
-            if (i % 3 == 0) {
-                recipe.setDrawableId(R.drawable.food);
-            }
-        }
-        //End dummy recipe data
+        //Get data
+        Cookbook cookbook = Cookbook.get(this);
+        List<Recipe>recipes = cookbook.getRecipes();
 
         recipeAdapter = new MainAdapter(this, this);
-        recipeAdapter.setData(recipeList);
+        recipeAdapter.setData(recipes);
         grid.setAdapter(recipeAdapter);
         layoutManager = new GridLayoutManager(this, columns);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
