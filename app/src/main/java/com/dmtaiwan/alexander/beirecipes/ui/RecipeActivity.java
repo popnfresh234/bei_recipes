@@ -1,5 +1,6 @@
 package com.dmtaiwan.alexander.beirecipes.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +15,12 @@ import android.widget.TextView;
 
 import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
+import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.RecipeAdapter;
 import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
+import com.dmtaiwan.alexander.beirecipes.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +42,9 @@ public class RecipeActivity extends AppCompatActivity
     @BindView(R.id.main_textview_title)
     TextView title;
 
+    @BindView(R.id.sub_text_title)
+    TextView subTitle;
+
     @BindView(R.id.main_appbar)
     AppBarLayout appBarLayout;
 
@@ -51,6 +55,7 @@ public class RecipeActivity extends AppCompatActivity
     RecyclerView recycler;
 
     private RecipeAdapter adapter;
+    private Recipe recipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +77,11 @@ public class RecipeActivity extends AppCompatActivity
                 switch (item.getItemId()) {
                     case R.id.action_edit:
                         quickLog.i("EDIT");
+                        Intent intent = new Intent(RecipeActivity.this, EditRecipeActivity.class);
+                        intent.putExtra(Utils.EXTRA_RECIPE, recipe);
+                        //Not a new recipe, attach false
+                        intent.putExtra(Utils.EXTRA_NEW_RECIPE, false);
+                        startActivity(intent);
                         break;
                     case R.id.action_delete:
                         quickLog.i("DELETE");
@@ -89,23 +99,17 @@ public class RecipeActivity extends AppCompatActivity
         recycler.setAdapter(adapter);
         recycler.setHasFixedSize(true);
 
-        //Dummy data
-
-        List<Ingredient> ingredients = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            Ingredient ingredient = new Ingredient();
-            ingredient.setName("Ingredient #" + String.valueOf(i));
-            double start = 0;
-            double end = 100;
-            double random = new Random().nextDouble();
-            double result = start + (random * (end - start));
-            ingredient.setCount(result);
-            ingredient.setUnit("mg");
-            ingredient.setProportionalCount(0);
-            ingredients.add(ingredient);
+        //Get recipe this Activity was created with
+        if (getIntent() != null) {
+            recipe = getIntent().getParcelableExtra(Utils.EXTRA_RECIPE);
+            //Set the name of the recipe
+            title.setText(recipe.getName());
+            subTitle.setText(recipe.getName());
+            List<Ingredient> ingredients = recipe.getIngredients();
+            adapter.setData(ingredients);
         }
-        adapter.setData(ingredients);
-        //End dummy data
+
+
     }
 
     @Override

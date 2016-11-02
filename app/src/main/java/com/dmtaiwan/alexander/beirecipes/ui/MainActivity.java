@@ -10,20 +10,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.dmtaiwan.alexander.beirecipes.R;
+import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.MainAdapter;
+import com.dmtaiwan.alexander.beirecipes.util.Utils;
 import com.dmtaiwan.alexander.beirecipes.util.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MainAdapter.RecyclerClickListener{
+public class MainActivity extends AppCompatActivity implements MainAdapter.RecyclerClickListener, View.OnClickListener{
 
     @BindView(R.id.grid)
     RecyclerView grid;
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.fab)
+    ImageButton fab;
+
 
     private MainAdapter recipeAdapter;
 
@@ -49,8 +56,10 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
-            ViewUtils.animateToolbar(toolbar,this);
+            ViewUtils.animateToolbar(toolbar, this);
         }
+
+        fab.setOnClickListener(this);
 
         //Deal with insets
         frameLayout.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
@@ -73,6 +82,13 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
                         grid.getPaddingRight() + insets.getSystemWindowInsetRight(), // landscape
                         grid.getPaddingBottom() + insets.getSystemWindowInsetBottom());
 
+                // inset the fab for the navbar
+                ViewGroup.MarginLayoutParams lpFab = (ViewGroup.MarginLayoutParams) fab
+                        .getLayoutParams();
+                lpFab.bottomMargin += insets.getSystemWindowInsetBottom(); // portrait
+                lpFab.rightMargin += insets.getSystemWindowInsetRight(); // landscape
+                fab.setLayoutParams(lpFab);
+
                 // we place a background behind the status bar to combine with it's semi-transparent
                 // color to get the desired appearance.  Set it's height to the status bar height
                 View statusBarBackground = findViewById(R.id.status_bar_background);
@@ -85,15 +101,34 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
             }
         });
 
-
+        //Dummy recipe data
         List<Recipe> recipeList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             Recipe recipe = Recipe.newRecipe("This is recipe #" + String.valueOf(i));
+
+            //Dummy ingredient data
+            List<Ingredient> ingredients = new ArrayList<>();
+            for (int j = 0; j < 6; j++) {
+                Ingredient ingredient = new Ingredient();
+                ingredient.setName("Ingredient #" + String.valueOf(j));
+                double start = 0;
+                double end = 100;
+                double random = new Random().nextDouble();
+                double result = start + (random * (end - start));
+                ingredient.setCount(result);
+                ingredient.setUnit("mg");
+                ingredient.setProportionalCount(0);
+                ingredients.add(ingredient);
+            }
+            recipe.setIngredients(ingredients);
+            //End dummy ingredient data
+
             recipeList.add(recipe);
             if (i % 3 == 0) {
                 recipe.setDrawableId(R.drawable.food);
             }
         }
+        //End dummy recipe data
 
         recipeAdapter = new MainAdapter(this, this);
         recipeAdapter.setData(recipeList);
@@ -130,8 +165,21 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
 
 
     @Override
-    public void onClick() {
+    public void onClick(Recipe recipe) {
         Intent intent = new Intent(this, RecipeActivity.class);
+        intent.putParcelableArrayListExtra(Utils.EXTRA_RECIPES, new ArrayList<Recipe>());
+        intent.putExtra(Utils.EXTRA_RECIPE, recipe);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fab:
+                Intent intent = new Intent(this, EditRecipeActivity.class);
+                intent.putExtra(Utils.EXTRA_NEW_RECIPE, true);
+                startActivity(intent);
+                break;
+        }
     }
 }

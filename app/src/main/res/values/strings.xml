@@ -21,4 +21,29 @@
     <string name="button_recipe_edit_save">Save</string>
     <string name="button_recipe_edit_up_arrow">↑</string>
 
+    <!--Ingredient Dialog-->
+    <string name="hint_dialog_ingredient_quantity">Qty.</string>
+    <string name="hint_dialog_ingredient_name">Ingredient Name</string>
+    <string name="button_dialog_add">Add</string>
+    <string name="button_dialog_cancel">Cancel</string>
+    <string name="button_dialog_remove">Remove</string>
+    <string name="button_dialog_update">Update</string>
+    <string name="error_dialog_enter_name">Please enter an ingredient</string>
+
+    <string-array name="dialog_spinner_units">
+        <item>Units</item>
+        <item>mg</item>
+        <item>g</item>
+        <item>kg</item>
+        <item>mL</item>
+        <item>L</item>
+        <item>tsp</item>
+        <item>tbsp</item>
+        <item>cup</item>
+        <item>piece</item>
+        <item>box</item>
+        <item>stick</item>
+        <item>(to taste)</item>
+    </string-array>
+
 </resources>

@@ -20,11 +20,21 @@
         android:clipToPadding="false"
         android:elevation="1dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.dmtaiwan.alexander.beirecipes.ui.MainActivity"
-    >
-    </android.support.v7.widget.RecyclerView>
+        tools:context="com.dmtaiwan.alexander.beirecipes.ui.MainActivity"/>
+    <ImageButton
+        android:id="@+id/fab"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+        android:elevation="@dimen/z_fab"
+        android:background="@drawable/fab"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/padding_normal"
+        android:layout_marginBottom="@dimen/padding_normal"
+        android:stateListAnimator="@animator/raise"
+        android:src="@drawable/ic_add_dark" />
 
     <android.support.v7.widget.Toolbar
+
         android:id="@+id/toolbar"
         style="@style/Widget.BeiRecipes.HomeToolbar"
         android:layout_width="match_parent"

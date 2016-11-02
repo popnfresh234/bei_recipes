@@ -10,7 +10,8 @@ import java.text.DecimalFormat;
 public class Utils
 {
 
-    public static final String EXTRA_RECIPES = "com.dmtaiwan.alexander.extra.recipe";
+    public static final String EXTRA_RECIPE = "com.dmtaiwan.alexander.extra.recipe";
+    public static final String EXTRA_RECIPES ="com.dmtaiwan.alexander.extra.recipes";
     public static final String EXTRA_RECIPE_POSITION = "com.dmtaiwan.alexander.extra.position";
     public static final String EXTRA_NEW_RECIPE = "com.dmtaiwan.alexander.extra.newrecipe";
 

@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
+import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,7 +40,7 @@ public class EditIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final IngredientHolder holder = new IngredientHolder(layoutInflater.inflate(R.layout.list_item_ingredient, parent, false));
+        final IngredientHolder holder = new IngredientHolder(layoutInflater.inflate(R.layout.list_item_edit_ingredient, parent, false));
         return holder;
     }
 
@@ -56,20 +58,20 @@ public class EditIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void bindIngredientHolder(IngredientHolder holder, final int position) {
-        Ingredient ingredient = ingredients.get(position);
+        final Ingredient ingredient = ingredients.get(position);
 
         //Move an ingredient up the list
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onMoveIngredientUpClicked(position);
+                listener.onMoveIngredientUpClicked(position, ingredient);
             }
         });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onIngredientCardViewClicked(position);
+                listener.onIngredientCardViewClicked(ingredients.get(position),position);
             }
         });
 
@@ -116,11 +118,36 @@ public class EditIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
+    public void setData(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+        notifyDataSetChanged();
+    }
+
+    public List<Ingredient> getData() {
+        if (ingredients != null) {
+            return ingredients;
+        } else return new ArrayList<>();
+
+    }
+
+    public void removeIngredient(int position) {
+        ingredients.remove(position);
+        notifyItemChanged(position);
+    }
+
+    public void addIngredient(int position, Ingredient ingredient) {
+        QuickLog.i("Adding");
+        QuickLog.i(position);
+        ingredients.add(position, ingredient);
+        notifyItemChanged(position);
+    }
+
+
     public interface AdapterListener {
 
-        public void onMoveIngredientUpClicked(int position);
+        public void onMoveIngredientUpClicked(int position, Ingredient ingredient);
 
-        public void onIngredientCardViewClicked(int position);
+        public void onIngredientCardViewClicked(Ingredient ingredient, int position);
 
     }
 

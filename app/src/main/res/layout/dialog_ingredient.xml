@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/dialog_edit_text_quantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/text_view_margin_side"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:hint="@string/hint_dialog_ingredient_quantity"
+            android:inputType="numberDecimal"
+            android:padding="@dimen/text_view_padding"
+            android:textSize="@dimen/ingredient_adatper_small_text"
+            android:textColor="@color/app_compat_light_text"
+            android:textColorHint="@color/app_compat_light_hint"/>
+
+
+        <Spinner
+            android:id="@+id/dialog_spinner_units"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spinner_padding"
+            android:background="@android:color/white"
+            android:layout_weight="2"
+            />
+
+
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/dialog_edit_text_ingredient_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_view_margin_top"
+        android:background="@android:color/white"
+        android:hint="@string/hint_dialog_ingredient_name"
+        android:padding="@dimen/text_view_padding"
+        android:textColor="@color/app_compat_light_text"
+        android:textColorHint="@color/app_compat_light_hint"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/recycler_margin_top">
+
+        <Button
+            android:id="@+id/dialog_button_add_ingredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:text="@string/button_dialog_add"
+            android:background="@drawable/custom_button"/>
+
+        <Button
+            android:id="@+id/dialog_button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/dialog_button_add_ingredient"
+            android:clickable="true"
+            android:text="@string/button_dialog_cancel"
+            android:minHeight="0dp"
+            android:minWidth="0dp"/>
+
+        <Button
+            android:id="@+id/dialog_button_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:text="@string/button_dialog_remove"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

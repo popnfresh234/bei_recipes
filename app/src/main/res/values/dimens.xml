@@ -5,20 +5,23 @@
     <dimen name="padding_normal">16dp</dimen>
     <dimen name="spacing_normal">16dp</dimen>
 
-    <!--text sizes-->
-    <dimen name="ingredient_adapter_tiny_text">10sp</dimen>
-
     <!-- grid -->
     <integer name="num_columns">2</integer>
 
     <!-- Z-axis elevations -->
     <dimen name="z_app_bar">4dp</dimen>
+    <dimen name="z_fab">6dp</dimen>
+    <dimen name="touch_raise">6dp</dimen>
 
     <!--circle image attributes-->
     <dimen name="circle_image_width">100dp</dimen>
     <dimen name="circle_image_height">100dp</dimen>
     <dimen name="circle_image_collapsed_width">32dp</dimen>
     <dimen name="circle_image_collapsed_height">32dp</dimen>
+
+    <!--standard metrics-->
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_radius">28dp</dimen>
 
     <!--Margins & Padding-->
     <dimen name="button_margin_top">8dp</dimen>
@@ -51,4 +54,11 @@
     <dimen name="control_corner_material">2dp</dimen>
 
     <dimen name="move_up_button_size">40dp</dimen>
+
+    <!--Text Sizes-->
+    <dimen name="recipe_adapter_title_text_size">24sp</dimen>
+    <dimen name="ingredient_adatper_small_text">12sp</dimen>
+    <dimen name="ingredient_adapter_tiny_text">10sp</dimen>
+    <dimen name="dialog_small_text">12sp</dimen>
+    <dimen name="dialog_large_text">22sp</dimen>
 </resources>

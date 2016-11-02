@@ -4,15 +4,11 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-                                       android:id="@+id/toolbar"
-                                       android:layout_width="match_parent"
-                                       android:layout_height="wrap_content"
-                                       android:background="?attr/colorPrimary"
-                                       android:minHeight="?attr/actionBarSize"/>
+    <include layout="@layout/toolbar" />
 
     <!-- activity view -->
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -39,33 +35,33 @@
                 android:layout_marginTop="@dimen/text_view_margin_top"
                 android:background="@android:color/white"
                 android:hint="@string/hint_recipe_edit_title_hint"
-                android:imeOptions="actionDone"
-                android:inputType="textCapWords"
                 android:padding="@dimen/edit_text_padding"
+                android:textColorHint="@color/app_compat_light_hint"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
-                android:textColorHint="@color/app_compat_light_hint"/>
+                android:inputType="textCapWords"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_view_margin_top"
-                android:text="@string/text_view_recipe_edit_ingredients_title"/>
+                android:text="@string/text_view_recipe_edit_ingredients_title" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view_ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/recycler_margin_top"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <Button
-                android:id="@+id/dialog_button_add_ingredient"
+                android:id="@+id/button_add_ingredient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/button_margin_top"
                 android:background="@drawable/custom_button"
                 android:text="@string/button_recipe_edit_add_ingredient"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
 
 
             <Button
@@ -75,9 +71,9 @@
                 android:layout_marginBottom="@dimen/button_margin_bottom"
                 android:background="@drawable/custom_button"
                 android:text="@string/button_recipe_edit_save"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
 
 
         </LinearLayout>
-    </ScrollView>
+   </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

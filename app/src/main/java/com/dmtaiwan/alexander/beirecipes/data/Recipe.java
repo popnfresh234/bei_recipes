@@ -24,6 +24,8 @@ public class Recipe implements Parcelable {
 
     private String name;
     private int drawableId;
+
+
     private List<Ingredient> ingredients;
 
     public String getName() {
@@ -33,12 +35,21 @@ public class Recipe implements Parcelable {
     public void setName(String name) {
         this.name = name;
     }
+
     public int getDrawableId() {
         return drawableId;
     }
 
     public void setDrawableId(int drawableId) {
         this.drawableId = drawableId;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
 

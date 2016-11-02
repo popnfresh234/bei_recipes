@@ -9,7 +9,7 @@ import android.util.Log;
 public class QuickLog {
 
 
-    private String tag;
+    private static String tag ="BeiRecipe";
 
     public static QuickLog newInstance(String tag) {
         QuickLog quickLog = new QuickLog();
@@ -17,43 +17,43 @@ public class QuickLog {
         return quickLog;
     }
 
-    public void i(String log) {
+    public static void i(String log) {
         Log.i(tag, log);
     }
 
-    public void i(boolean bool) {
+    public static void i(boolean bool) {
         Log.i(tag, String.valueOf(bool));
     }
 
-    public void i(int i) {
+    public static void i(int i) {
         Log.i(tag, String.valueOf(i));
     }
 
-    public void i(double d) {
+    public static void i(double d) {
         Log.i(tag, String.valueOf(d));
     }
 
-    public void i(long l) {
+    public static void i(long l) {
         Log.i(tag, String.valueOf(l));
     }
 
-    public void e(String log) {
+    public static void e(String log) {
         Log.e(tag, log);
     }
 
-    public void e(boolean bool) {
+    public static void e(boolean bool) {
         Log.e(tag, String.valueOf(bool));
     }
 
-    public void e(int i) {
+    public static void e(int i) {
         Log.e(tag, String.valueOf(i));
     }
 
-    public void e(double d) {
+    public static void e(double d) {
         Log.e(tag, String.valueOf(d));
     }
 
-    public void e(long l) {
+    public static void e(long l) {
         Log.e(tag, String.valueOf(l));
     }
 
