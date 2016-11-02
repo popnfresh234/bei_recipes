@@ -20,6 +20,7 @@ import com.dmtaiwan.alexander.beirecipes.ui.adapters.RecipeAdapter;
 import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,8 +55,12 @@ public class RecipeActivity extends AppCompatActivity
     @BindView(R.id.ingredient_recycler)
     RecyclerView recycler;
 
+    @BindView(R.id.empty_view)
+    TextView emptyView;
+
     private RecipeAdapter adapter;
-    private Recipe recipe;
+    private ArrayList<Recipe> recipes;
+    private int recipePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,25 @@ public class RecipeActivity extends AppCompatActivity
         ButterKnife.bind(this);
         final QuickLog quickLog = QuickLog.newInstance("RecipeActivity");
 
+        //Set up the RecyclerView and Adapter
+        adapter = new RecipeAdapter(RecipeActivity.this, this, emptyView, recycler);
+        llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recycler.setLayoutManager(llm);
+        recycler.setAdapter(adapter);
+        recycler.setHasFixedSize(true);
+
+        //Get recipe this Activity was created with
+        if (getIntent() != null) {
+            recipes = getIntent().getParcelableArrayListExtra(Utils.EXTRA_RECIPES);
+            recipePosition = getIntent().getIntExtra(Utils.EXTRA_RECIPE_POSITION, 0);
+            Recipe recipe = recipes.get(recipePosition);
+            //Set the name of the recipe
+            title.setText(recipe.getName());
+            subTitle.setText(recipe.getName());
+            List<Ingredient> ingredients = recipe.getIngredients();
+            adapter.setData(ingredients);
+        }
 
         appBarLayout.addOnOffsetChangedListener(this);
         startAlphaAnimation(title, 0, View.INVISIBLE);
@@ -76,12 +100,13 @@ public class RecipeActivity extends AppCompatActivity
 
                 switch (item.getItemId()) {
                     case R.id.action_edit:
-                        quickLog.i("EDIT");
                         Intent intent = new Intent(RecipeActivity.this, EditRecipeActivity.class);
-                        intent.putExtra(Utils.EXTRA_RECIPE, recipe);
-                        //Not a new recipe, attach false
+                        intent.putExtra(Utils.EXTRA_RECIPES, recipes);
+                        intent.putExtra(Utils.EXTRA_RECIPE_POSITION, recipePosition);
                         intent.putExtra(Utils.EXTRA_NEW_RECIPE, false);
                         startActivity(intent);
+                        finish();
+                        quickLog.i("EDIT");
                         break;
                     case R.id.action_delete:
                         quickLog.i("DELETE");
@@ -91,23 +116,9 @@ public class RecipeActivity extends AppCompatActivity
             }
         });
 
-        //Set up the RecyclerView and Adapter
-        adapter = new RecipeAdapter(RecipeActivity.this, this);
-        llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler.setLayoutManager(llm);
-        recycler.setAdapter(adapter);
-        recycler.setHasFixedSize(true);
 
-        //Get recipe this Activity was created with
-        if (getIntent() != null) {
-            recipe = getIntent().getParcelableExtra(Utils.EXTRA_RECIPE);
-            //Set the name of the recipe
-            title.setText(recipe.getName());
-            subTitle.setText(recipe.getName());
-            List<Ingredient> ingredients = recipe.getIngredients();
-            adapter.setData(ingredients);
-        }
+
+
 
 
     }

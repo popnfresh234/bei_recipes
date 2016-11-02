@@ -31,10 +31,11 @@ public class EditIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private AdapterListener listener;
     private LayoutInflater layoutInflater;
 
-    public EditIngredientAdapter(Activity hostActivity, AdapterListener listener) {
+    public EditIngredientAdapter(Activity hostActivity, AdapterListener listener, List<Ingredient> ingredients) {
         this.hostActivity = hostActivity;
         this.listener = listener;
         this.layoutInflater = hostActivity.getLayoutInflater();
+        this.ingredients = ingredients;
     }
 
 
@@ -64,14 +65,14 @@ public class EditIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onMoveIngredientUpClicked(position, ingredient);
+                listener.onMoveIngredientUpClicked(position);
             }
         });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onIngredientCardViewClicked(ingredients.get(position),position);
+                listener.onIngredientCardViewClicked(position);
             }
         });
 
@@ -145,9 +146,9 @@ public class EditIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public interface AdapterListener {
 
-        public void onMoveIngredientUpClicked(int position, Ingredient ingredient);
+        public void onMoveIngredientUpClicked(int position);
 
-        public void onIngredientCardViewClicked(Ingredient ingredient, int position);
+        public void onIngredientCardViewClicked(int position);
 
     }
 

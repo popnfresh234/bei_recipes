@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
+import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -33,11 +34,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private DecimalFormat mDecimalFormat = new DecimalFormat("0");
     private RecyclerTextChangedListener listener;
     private boolean onBind;
+    private View emptyView;
+    private View recycler;
 
-    public RecipeAdapter(Activity hostActivity, RecyclerTextChangedListener listener) {
+    public RecipeAdapter(Activity hostActivity, RecyclerTextChangedListener listener, View emptyView, View recycler) {
         this.layoutInflater = hostActivity.getLayoutInflater();
         this.hostActivity = hostActivity;
         this.listener = listener;
+        this.emptyView = emptyView;
+        this.recycler = recycler;
     }
 
     @Override
@@ -52,7 +57,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == VIEW_TYPE_REGULAR) {
-            bindIngredientItem((RecipeHolder) holder, position);
+            //Offset by one to account for header row
+            bindIngredientItem((RecipeHolder) holder, position-1);
         }
 
     }
@@ -60,7 +66,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return ingredients.size();
+        if (ingredients.size() > 0) {
+            //Offset by one to account for header row
+            return ingredients.size()+1;
+        }
+        //This handles the case of no ingredients, still want to display the header row
+        else return 1;
+
     }
 
     @Override
@@ -81,6 +93,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void bindIngredientItem(RecipeHolder holder, int position) {
+        QuickLog.i(position);
         Ingredient ingredient = ingredients.get(position);
         holder.title.setText(ingredient.getName());
         String formattedCount = mDecimalFormat.format(ingredient.getCount());
@@ -89,7 +102,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         String formattedProportialCount = mDecimalFormat.format(ingredient.getProportionalCount());
         onBind = true;
         holder.proportionalCount.setText(formattedProportialCount);
-        onBind =false;
+        onBind = false;
     }
 
     public class RecipeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -128,7 +141,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public class HeaderHolder extends RecyclerView.ViewHolder{
+    public class HeaderHolder extends RecyclerView.ViewHolder {
         HeaderHolder(View itemView) {
             super(itemView);
         }
@@ -139,6 +152,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void setData(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
         notifyDataSetChanged();
+        emptyView.setVisibility(ingredients.size() == 0 ? View.VISIBLE : View.GONE);
+
+        recycler.setVisibility(ingredients.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     public List<Ingredient> getData() {

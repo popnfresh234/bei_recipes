@@ -3,6 +3,7 @@ package com.dmtaiwan.alexander.beirecipes.data;
 import android.content.Context;
 
 import com.dmtaiwan.alexander.beirecipes.R;
+import com.dmtaiwan.alexander.beirecipes.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +15,13 @@ import java.util.Random;
 
 public class Cookbook {
     private static Cookbook cookbook;
-    private List<Recipe> recipes;
+    private ArrayList<Recipe> recipes;
 
     private Cookbook(Context context) {
-        recipes = getRecipesFromStorage();
+        recipes = getRecipesFromStorage(context);
     }
 
-    public List<Recipe> getRecipes() {
+    public ArrayList<Recipe> getRecipes() {
         return recipes;
     }
 
@@ -31,7 +32,7 @@ public class Cookbook {
         return cookbook;
     }
 
-    private List<Recipe> getRecipesFromStorage() {
+    private List<Recipe> getDummyData() {
         //Dummy recipe data
         List<Recipe> recipeList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
@@ -61,5 +62,18 @@ public class Cookbook {
         }
         //End dummy recipe data
         return recipeList;
+    }
+
+    private ArrayList<Recipe> getRecipesFromStorage(Context context) {
+        if (Utils.doesRecipeFileExist(context)) {
+            //get data from SD card
+            String json = Utils.readRecipesFromFile(context);
+            return Utils.recipesFromJson(json);
+
+        } else return new ArrayList<>();
+    }
+
+    public void updateRecipes(ArrayList<Recipe> recipes) {
+        this.recipes = recipes;
     }
 }

@@ -94,7 +94,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-            listener.onClick(recipes.get(getAdapterPosition()));
+            listener.onClick(getAdapterPosition());
         }
     }
 
@@ -115,6 +115,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public interface RecyclerClickListener{
-        void onClick(Recipe recipe);
+        void onClick(int position);
     }
 }

@@ -16,11 +16,11 @@ import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.MainAdapter;
+import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 import com.dmtaiwan.alexander.beirecipes.util.ViewUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindInt;
 import butterknife.BindView;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
 
 
     private MainAdapter recipeAdapter;
+    private ArrayList<Recipe> recipes;
 
 
     @Override
@@ -100,12 +101,10 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
             }
         });
 
-        //Get data
-        Cookbook cookbook = Cookbook.get(this);
-        List<Recipe>recipes = cookbook.getRecipes();
+
 
         recipeAdapter = new MainAdapter(this, this);
-        recipeAdapter.setData(recipes);
+
         grid.setAdapter(recipeAdapter);
         layoutManager = new GridLayoutManager(this, columns);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -117,6 +116,18 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
         grid.setLayoutManager(layoutManager);
         grid.setHasFixedSize(true);
         grid.addOnScrollListener(toolbarElevation);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Get data
+        QuickLog.i("onResume");
+
+        Cookbook cookbook = Cookbook.get(this);
+        recipes = cookbook.getRecipes();
+        QuickLog.i(recipes.size());
+        recipeAdapter.setData(recipes);
     }
 
     private RecyclerView.OnScrollListener toolbarElevation = new RecyclerView.OnScrollListener() {
@@ -139,10 +150,10 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
 
 
     @Override
-    public void onClick(Recipe recipe) {
+    public void onClick(int position) {
         Intent intent = new Intent(this, RecipeActivity.class);
-        intent.putParcelableArrayListExtra(Utils.EXTRA_RECIPES, new ArrayList<Recipe>());
-        intent.putExtra(Utils.EXTRA_RECIPE, recipe);
+        intent.putParcelableArrayListExtra(Utils.EXTRA_RECIPES, recipes);
+        intent.putExtra(Utils.EXTRA_RECIPE_POSITION, position);
         startActivity(intent);
     }
 
@@ -151,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
         switch (view.getId()) {
             case R.id.fab:
                 Intent intent = new Intent(this, EditRecipeActivity.class);
+                intent.putParcelableArrayListExtra(Utils.EXTRA_RECIPES, recipes);
                 intent.putExtra(Utils.EXTRA_NEW_RECIPE, true);
                 startActivity(intent);
                 break;

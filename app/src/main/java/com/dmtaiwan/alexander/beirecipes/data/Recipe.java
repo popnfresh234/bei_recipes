@@ -24,6 +24,15 @@ public class Recipe implements Parcelable {
         return recipe;
     }
 
+    public static Recipe newRecipe(String name, List<Ingredient> ingredients) {
+        Recipe recipe = new Recipe();
+        recipe.ingredients = ingredients;
+        recipe.name = name;
+        recipe.drawableId = 0;
+        recipe.id = UUID.randomUUID();
+        return recipe;
+    }
+
     private String name;
     private UUID id;
     private int drawableId;

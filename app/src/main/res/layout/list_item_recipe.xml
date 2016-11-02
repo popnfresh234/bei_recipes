@@ -12,7 +12,6 @@
     <com.dmtaiwan.alexander.beirecipes.ui.views.BaselineGridTextView
         android:id="@+id/holder_recipe_name"
         style="@style/TextAppearance.GridPrimary"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/padding_normal"
