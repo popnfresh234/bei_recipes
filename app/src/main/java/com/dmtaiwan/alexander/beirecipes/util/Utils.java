@@ -2,6 +2,7 @@ package com.dmtaiwan.alexander.beirecipes.util;
 
 import android.content.Context;
 
+import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -88,5 +89,11 @@ public class Utils
         Type type = new TypeToken<ArrayList<Recipe>>(){}.getType();
         ArrayList<Recipe> recipeList = new Gson().fromJson(json, type);
         return recipeList;
+    }
+
+    public static void writeDataUpdateCookbook(ArrayList<Recipe> recipes, String jsonList, Context context) {
+        Utils.writeRecipesToFile(jsonList, context);
+        Cookbook cookbook = Cookbook.get(context);
+        cookbook.updateRecipes(recipes);
     }
 }

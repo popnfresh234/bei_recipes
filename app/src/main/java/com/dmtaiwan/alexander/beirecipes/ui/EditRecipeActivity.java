@@ -17,7 +17,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.dmtaiwan.alexander.beirecipes.R;
-import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.EditIngredientAdapter;
@@ -269,13 +268,13 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
             mRecipeList.set(mRecipePosition, mRecipe);
             Collections.sort(mRecipeList, new RecipeComparator());
             jsonList = gson.toJson(mRecipeList);
-            writeDataUpdateCookbook(jsonList);
+            Utils.writeDataUpdateCookbook(mRecipeList, jsonList, this);
         } else if (mRecipeList != null) {
             mRecipe = Recipe.newRecipe(mTitleEditText.getText().toString(), mIngredientList);
             mRecipeList.add(mRecipe);
             Collections.sort(mRecipeList, new RecipeComparator());
             jsonList = gson.toJson(mRecipeList);
-            writeDataUpdateCookbook(jsonList);
+            Utils.writeDataUpdateCookbook(mRecipeList, jsonList, this);
         } else {
             //New Recipe
             mRecipeList = new ArrayList<Recipe>();
@@ -283,16 +282,12 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
             mRecipeList.add(mRecipe);
             Collections.sort(mRecipeList, new RecipeComparator());
             jsonList = gson.toJson(mRecipeList);
-            writeDataUpdateCookbook(jsonList);
+            Utils.writeDataUpdateCookbook(mRecipeList, jsonList, this);
         }
         finish();
     }
 
-    private void writeDataUpdateCookbook(String jsonList) {
-        Utils.writeRecipesToFile(jsonList, mContext);
-        Cookbook cookbook = Cookbook.get(this);
-        cookbook.updateRecipes(mRecipeList);
-    }
+
 
     @Override
     public void onMoveIngredientUpClicked(int position) {

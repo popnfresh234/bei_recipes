@@ -31,6 +31,11 @@
     <string name="button_dialog_update">Update</string>
     <string name="error_dialog_enter_name">Please enter an ingredient</string>
 
+    <!--Delete AlertDialog-->
+    <string name="dialog_confirm">Are you sure?</string>
+    <string name="dialog_positive">OK</string>
+    <string name="dialog_negative">Cancel</string>
+
     <string-array name="dialog_spinner_units">
         <item>Units</item>
         <item>mg</item>

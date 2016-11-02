@@ -1,5 +1,8 @@
 package com.dmtaiwan.alexander.beirecipes.ui;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -19,6 +22,7 @@ import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.RecipeAdapter;
 import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,17 +114,37 @@ public class RecipeActivity extends AppCompatActivity
                         break;
                     case R.id.action_delete:
                         quickLog.i("DELETE");
+                        displayDeleteAlert(RecipeActivity.this);
                         break;
                 }
                 return true;
             }
         });
+    }
 
-
-
-
-
-
+    private void displayDeleteAlert(final Context context) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch(which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Write deleted recipe to file
+                        Recipe recipe = recipes.get(recipePosition);
+                        ArrayList<Recipe> deletedRecipes = new ArrayList<>();
+                        recipes.remove(recipePosition);
+                        String jsonList = new Gson().toJson(recipes);
+                        Utils.writeDataUpdateCookbook(recipes, jsonList, RecipeActivity.this);
+                        finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.dialog_confirm))
+                .setPositiveButton(getString(R.string.dialog_positive), dialogClickListener)
+                .setNegativeButton(getString(R.string.dialog_negative), dialogClickListener).show();
     }
 
     @Override
