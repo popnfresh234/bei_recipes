@@ -56,9 +56,8 @@
     <dimen name="move_up_button_size">40dp</dimen>
 
     <!--Text Sizes-->
-    <dimen name="recipe_adapter_title_text_size">24sp</dimen>
-    <dimen name="ingredient_adatper_small_text">12sp</dimen>
-    <dimen name="ingredient_adapter_tiny_text">10sp</dimen>
-    <dimen name="dialog_small_text">12sp</dimen>
-    <dimen name="dialog_large_text">22sp</dimen>
+    <dimen name="tiny_text">10sp</dimen>
+    <dimen name="small_text">12sp</dimen>
+    <dimen name="large_text">22sp</dimen>
+    <dimen name="extra_large_text">24sp</dimen>
 </resources>

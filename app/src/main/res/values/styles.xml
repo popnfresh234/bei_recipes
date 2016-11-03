@@ -21,12 +21,37 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="BeiRecipe.EditRecipeAcivity" parent="BeiRecipe">
+        <item name="android:windowBackground">@color/dark_theme_primary_dark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
 
     <style name="TextAppearance.GridPrimary" parent="@android:style/TextAppearance.Material.Subhead">
         <item name="android:letterSpacing">0.01</item>
         <item name="lineHeightHint">20sp</item>
         <item name="font">roboto-mono-regular</item>
     </style>
+
+    <style name="TextAppearance.GeneralText" parent="@android:style/TextAppearance.Material.Subhead">
+        <item name="font">roboto-mono-regular</item>
+    </style>
+
+    <style name="TextAppearance.GeneralText.Small" parent="@android:style/TextAppearance.Material.Subhead">
+        <item name="android:textSize">@dimen/small_text</item>
+    </style>
+
+    <style name="TextAppearance.GeneralText.Tiny" parent="@android:style/TextAppearance.Material.Subhead">
+        <item name="android:textSize">@dimen/tiny_text</item>
+    </style>
+
+
+    <style name="TextAppearance.TinyText" parent="@android:style/TextAppearance.Material.Subhead">
+        <item name="font">roboto-mono-regular</item>
+        <item name="android:textSize">@dimen/tiny_text</item>
+        <item name="android:textColor">@color/app_compat_light_text</item>
+    </style>
+
 
     <style name="DarkOverlay" parent="@android:style/ThemeOverlay.Material.Dark.ActionBar">
         <!-- Used to theme dark elements in light themed screens.
@@ -35,10 +60,12 @@
 
     <!--toolbar styling-->
 
-    <style name="Widget.BeiRecipes" parent="android:Widget" />
+    <style name="Widget.BeiRecipes" parent="android:Widget"/>
 
     <style name="Widget.BeiRecipes.Toolbar">
-        <item name="android:titleTextAppearance">@android:style/TextAppearance.Material.Widget.ActionBar.Title</item>
+        <item name="android:titleTextAppearance">
+            @android:style/TextAppearance.Material.Widget.ActionBar.Title
+        </item>
         <item name="android:background">?android:colorPrimary</item>
         <item name="android:elevation">@dimen/z_app_bar</item>
         <item name="android:theme">@style/DarkOverlay</item>

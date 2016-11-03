@@ -20,6 +20,7 @@ import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.EditIngredientAdapter;
+import com.dmtaiwan.alexander.beirecipes.ui.views.FontEditText;
 import com.dmtaiwan.alexander.beirecipes.util.RecipeComparator;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 import com.google.gson.Gson;
@@ -39,42 +40,42 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
 
 
 
-    private Context mContext = this;
-    private Recipe mRecipe;
-    private Boolean mNewIngredient = false;
-    private Ingredient mIngredient;
-    private EditIngredientAdapter mIngredientAdapter;
-    private ArrayList<Recipe> mRecipeList;
-    private int mRecipePosition;
-    private Boolean mNewRecipe;
+    private Context context = this;
+    private Recipe recipe;
+    private Boolean newIngredient = false;
+    private Ingredient ingredient;
+    private EditIngredientAdapter adapter;
+    private ArrayList<Recipe> recipes;
+    private int recipePosition;
+    private Boolean newRecipe;
 
 
     @BindView(R.id.button_add_ingredient)
-    Button mAddIngredientButton;
+    Button addIngredientButton;
 
     @BindView(R.id.button_save)
-    Button mSaveButton;
+    Button saveButton;
 
     @BindView(R.id.edit_text_title)
-    EditText mTitleEditText;
+    FontEditText titleEditText;
 
     @BindView(R.id.recycler_view_ingredients)
-    RecyclerView mIngredientsRecyclerView;
+    RecyclerView recyclerView;
 
 
     //Ingredient Dialog Views
-    private EditText mDialogQuantityEditText;
-    private EditText mDialogIngredientNameEditText;
-    private Spinner mDialogUnitSpinner;
-    private Button mDialogAddIngredientButton;
-    private Button mDialogCancelIngredientButton;
-    private Button mDialogRemoveIngredientButton;
+    private EditText dialogCountEditText;
+    private EditText dialogIngredientNameEditText;
+    private Spinner dialogUnitSpinner;
+    private Button dialogAddIngredientButton;
+    private Button dialogCancelIngredientButton;
+    private Button dialogRemoveIngredientButton;
 
 
-    private InputMethodManager mImm;
+    private InputMethodManager imm;
 
     //Setup ArrayList of Ingredients and Direction
-    private ArrayList<Ingredient> mIngredientList = null;
+    private ArrayList<Ingredient> ingredients = null;
 
 
     @Override
@@ -84,156 +85,156 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         ButterKnife.bind(this);
 
 
-        mIngredientList = new ArrayList<Ingredient>();
+        ingredients = new ArrayList<Ingredient>();
 
         if (getIntent() != null) {
-            mRecipeList = getIntent().getParcelableArrayListExtra(Utils.EXTRA_RECIPES);
-            mRecipePosition = getIntent().getIntExtra(Utils.EXTRA_RECIPE_POSITION, -1);
-            mNewRecipe = getIntent().getBooleanExtra(Utils.EXTRA_NEW_RECIPE, true);
+            recipes = getIntent().getParcelableArrayListExtra(Utils.EXTRA_RECIPES);
+            recipePosition = getIntent().getIntExtra(Utils.EXTRA_RECIPE_POSITION, -1);
+            newRecipe = getIntent().getBooleanExtra(Utils.EXTRA_NEW_RECIPE, true);
         }
 
         //Get input method manager
-        mImm = (InputMethodManager) getSystemService(
+        imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
 
         //Setup Recycler Views
 
-        mIngredientsRecyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        mIngredientsRecyclerView.setLayoutManager(llm);
-        mIngredientAdapter = new EditIngredientAdapter(this, this, mIngredientList);
-        mIngredientsRecyclerView.setAdapter(mIngredientAdapter);
+        recyclerView.setLayoutManager(llm);
+        adapter = new EditIngredientAdapter(this, this, ingredients);
+        recyclerView.setAdapter(adapter);
 
 
-        mAddIngredientButton.setOnClickListener(this);
-        mSaveButton.setOnClickListener(this);
+        addIngredientButton.setOnClickListener(this);
+        saveButton.setOnClickListener(this);
 
         //If position passed with intent, populate recipe
-        if (mRecipePosition != -1) {
-            Recipe recipe = mRecipeList.get(mRecipePosition);
+        if (recipePosition != -1) {
+            Recipe recipe = recipes.get(recipePosition);
             populateRecipe(recipe);
         }
     }
 
 
     private void populateRecipe(Recipe recipe) {
-        mRecipe = recipe;
+        this.recipe = recipe;
         //Load Ingredients
         List<Ingredient> tempIngredientList = recipe.getIngredients();
         if (tempIngredientList.size() > 0) {
             for (int i = 0; i < tempIngredientList.size(); i++) {
-                mIngredientList.add(tempIngredientList.get(i));
+                ingredients.add(tempIngredientList.get(i));
             }
-            mIngredientsRecyclerView.setVisibility(View.VISIBLE);
-            mIngredientAdapter.notifyDataSetChanged();
+            recyclerView.setVisibility(View.VISIBLE);
+            adapter.notifyDataSetChanged();
         }
         //Set Title
-        mTitleEditText.setText(recipe.getName());
+        titleEditText.setText(recipe.getName());
     }
 
 
     private void CreateIngredientDialog(Ingredient ingredient, final int position) {
 
         if (ingredient == null) {
-            mIngredient = new Ingredient();
-            mNewIngredient = true;
+            this.ingredient = new Ingredient();
+            newIngredient = true;
         } else {
-            mIngredient = ingredient;
+            this.ingredient = ingredient;
         }
 
-        final Dialog dialog = new Dialog(mContext);
+        final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_ingredient);
 
         //Setup EditTexts
-        mDialogQuantityEditText = (EditText) dialog.findViewById(R.id.dialog_edit_text_quantity);
-        if (!mNewIngredient && mIngredient.getCount() != 0) {
+        dialogCountEditText = (EditText) dialog.findViewById(R.id.dialog_edit_text_quantity);
+        if (!newIngredient && this.ingredient.getCount() != 0) {
             double quantity = ingredient.getCount();
             String stringQuantity = Utils.formatNumber(quantity);
-            mDialogQuantityEditText.setText(stringQuantity);
+            dialogCountEditText.setText(stringQuantity);
         }
 
-        mDialogIngredientNameEditText = (EditText) dialog.findViewById(R.id.dialog_edit_text_ingredient_name);
-        if (!mNewIngredient) {
-            mDialogIngredientNameEditText.setText(mIngredient.getName());
+        dialogIngredientNameEditText = (EditText) dialog.findViewById(R.id.dialog_edit_text_ingredient_name);
+        if (!newIngredient) {
+            dialogIngredientNameEditText.setText(this.ingredient.getName());
         }
 
         //Setup unit spinner
-        mDialogUnitSpinner = (Spinner) dialog.findViewById(R.id.dialog_spinner_units);
-        ArrayAdapter<CharSequence> unitSpinnerAdapter = ArrayAdapter.createFromResource(mContext, R.array.dialog_spinner_units, R.layout.dialog_spinner_item);
+        dialogUnitSpinner = (Spinner) dialog.findViewById(R.id.dialog_spinner_units);
+        ArrayAdapter<CharSequence> unitSpinnerAdapter = ArrayAdapter.createFromResource(context, R.array.dialog_spinner_units, R.layout.dialog_spinner_item);
         unitSpinnerAdapter.setDropDownViewResource(R.layout.dialog_spinner_layout);
-        mDialogUnitSpinner.setAdapter(unitSpinnerAdapter);
-        if (!mNewIngredient && mIngredient.getUnit() != null) {
-            String compareValue = mIngredient.getUnit();
+        dialogUnitSpinner.setAdapter(unitSpinnerAdapter);
+        if (!newIngredient && this.ingredient.getUnit() != null) {
+            String compareValue = this.ingredient.getUnit();
             if (!compareValue.equals(null)) {
                 int spinnerPosition = unitSpinnerAdapter.getPosition(compareValue);
-                mDialogUnitSpinner.setSelection(spinnerPosition);
+                dialogUnitSpinner.setSelection(spinnerPosition);
                 spinnerPosition = 0;
             }
         }
 
         //Add ingredient button
-        mDialogAddIngredientButton = (Button) dialog.findViewById(R.id.dialog_button_add_ingredient);
-        if (!mNewIngredient) mDialogAddIngredientButton.setText("Update");
+        dialogAddIngredientButton = (Button) dialog.findViewById(R.id.dialog_button_add_ingredient);
+        if (!newIngredient) dialogAddIngredientButton.setText("Update");
 
-        mDialogAddIngredientButton.setOnClickListener(new View.OnClickListener() {
+        dialogAddIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNewIngredient = false;
-                mImm.hideSoftInputFromWindow(mDialogQuantityEditText.getWindowToken(), 0);
-                mImm.hideSoftInputFromWindow(mDialogIngredientNameEditText.getWindowToken(), 0);
-                if (!mDialogIngredientNameEditText.getText().toString().equals("")) {
+                newIngredient = false;
+                imm.hideSoftInputFromWindow(dialogCountEditText.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(dialogIngredientNameEditText.getWindowToken(), 0);
+                if (!dialogIngredientNameEditText.getText().toString().equals("")) {
 
-                    if (!mDialogQuantityEditText.getText().toString().equals("")) {
-                        mIngredient.setCount(Double.valueOf(mDialogQuantityEditText.getText().toString().trim()));
+                    if (!dialogCountEditText.getText().toString().equals("")) {
+                        EditRecipeActivity.this.ingredient.setCount(Double.valueOf(dialogCountEditText.getText().toString().trim()));
                     }
 
-                    if (mDialogUnitSpinner.getSelectedItemPosition() == 0) {
-                        mIngredient.setUnit(null);
+                    if (dialogUnitSpinner.getSelectedItemPosition() == 0) {
+                        EditRecipeActivity.this.ingredient.setUnit(null);
                     }
-                    if (!mDialogUnitSpinner.getSelectedItem().toString().equals("Units")) {
-                        mIngredient.setUnit(mDialogUnitSpinner.getSelectedItem().toString());
+                    if (!dialogUnitSpinner.getSelectedItem().toString().equals("Units")) {
+                        EditRecipeActivity.this.ingredient.setUnit(dialogUnitSpinner.getSelectedItem().toString());
                     }
-                    if (!mDialogIngredientNameEditText.getText().toString().equals("")) {
-                        mIngredient.setName(mDialogIngredientNameEditText.getText().toString().toLowerCase().trim());
+                    if (!dialogIngredientNameEditText.getText().toString().equals("")) {
+                        EditRecipeActivity.this.ingredient.setName(dialogIngredientNameEditText.getText().toString().toLowerCase().trim());
                     }
 
                     dialog.dismiss();
 
                     if (position == -1) {
                         Log.i("ADDING", "adding");
-                        mIngredientList.add(mIngredient);
+                        ingredients.add(EditRecipeActivity.this.ingredient);
                     } else {
-                        mIngredientList.set(position, mIngredient);
+                        ingredients.set(position, EditRecipeActivity.this.ingredient);
                     }
-                    if (mIngredientList.size() > 0) {
-                        mIngredientsRecyclerView.setVisibility(View.VISIBLE);
+                    if (ingredients.size() > 0) {
+                        recyclerView.setVisibility(View.VISIBLE);
 
                     }
-                    mIngredientAdapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(mContext, "Please enter an ingredient", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please enter an ingredient", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         //Remove Ingredient Button
-        mDialogRemoveIngredientButton = (Button) dialog.findViewById(R.id.dialog_button_remove);
-        if (!mNewIngredient) mDialogRemoveIngredientButton.setVisibility(View.VISIBLE);
-        mDialogRemoveIngredientButton.setOnClickListener(new View.OnClickListener() {
+        dialogRemoveIngredientButton = (Button) dialog.findViewById(R.id.dialog_button_remove);
+        if (!newIngredient) dialogRemoveIngredientButton.setVisibility(View.VISIBLE);
+        dialogRemoveIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIngredientList.remove(position);
-                mIngredientAdapter.notifyDataSetChanged();
+                ingredients.remove(position);
+                adapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
         });
 
 
         //Setup cancel button
-        mDialogCancelIngredientButton = (Button) dialog.findViewById(R.id.dialog_button_cancel);
-        mDialogCancelIngredientButton.setOnClickListener(new View.OnClickListener() {
+        dialogCancelIngredientButton = (Button) dialog.findViewById(R.id.dialog_button_cancel);
+        dialogCancelIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -262,27 +263,27 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         String jsonList = "";
         //Save recipe here
         //Editing Recipe
-        if (!mNewRecipe) {
-            mRecipe.setName(mTitleEditText.getText().toString());
-            mRecipe.setIngredients(mIngredientList);
-            mRecipeList.set(mRecipePosition, mRecipe);
-            Collections.sort(mRecipeList, new RecipeComparator());
-            jsonList = gson.toJson(mRecipeList);
-            Utils.writeDataUpdateCookbook(mRecipeList, jsonList, this);
-        } else if (mRecipeList != null) {
-            mRecipe = Recipe.newRecipe(mTitleEditText.getText().toString(), mIngredientList);
-            mRecipeList.add(mRecipe);
-            Collections.sort(mRecipeList, new RecipeComparator());
-            jsonList = gson.toJson(mRecipeList);
-            Utils.writeDataUpdateCookbook(mRecipeList, jsonList, this);
+        if (!newRecipe) {
+            recipe.setName(titleEditText.getText().toString());
+            recipe.setIngredients(ingredients);
+            recipes.set(recipePosition, recipe);
+            Collections.sort(recipes, new RecipeComparator());
+            jsonList = gson.toJson(recipes);
+            Utils.writeDataUpdateCookbook(recipes, jsonList, this);
+        } else if (recipes != null) {
+            recipe = Recipe.newRecipe(titleEditText.getText().toString(), ingredients);
+            recipes.add(recipe);
+            Collections.sort(recipes, new RecipeComparator());
+            jsonList = gson.toJson(recipes);
+            Utils.writeDataUpdateCookbook(recipes, jsonList, this);
         } else {
             //New Recipe
-            mRecipeList = new ArrayList<Recipe>();
-            mRecipe = Recipe.newRecipe(mTitleEditText.getText().toString(), mIngredientList);
-            mRecipeList.add(mRecipe);
-            Collections.sort(mRecipeList, new RecipeComparator());
-            jsonList = gson.toJson(mRecipeList);
-            Utils.writeDataUpdateCookbook(mRecipeList, jsonList, this);
+            recipes = new ArrayList<Recipe>();
+            recipe = Recipe.newRecipe(titleEditText.getText().toString(), ingredients);
+            recipes.add(recipe);
+            Collections.sort(recipes, new RecipeComparator());
+            jsonList = gson.toJson(recipes);
+            Utils.writeDataUpdateCookbook(recipes, jsonList, this);
         }
         finish();
     }
@@ -293,17 +294,17 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
     public void onMoveIngredientUpClicked(int position) {
         int newPosition = position - 1;
         if (newPosition < 0) return;
-        Ingredient ingredient = mIngredientList.get(position);
-        mIngredientList.remove(position);
-        mIngredientAdapter.notifyItemChanged(position);
-        mIngredientList.add(newPosition, ingredient);
-        mIngredientAdapter.notifyItemChanged(newPosition);
-        mIngredientAdapter.notifyItemMoved(position, newPosition);
+        Ingredient ingredient = ingredients.get(position);
+        ingredients.remove(position);
+        adapter.notifyItemChanged(position);
+        ingredients.add(newPosition, ingredient);
+        adapter.notifyItemChanged(newPosition);
+        adapter.notifyItemMoved(position, newPosition);
     }
 
     @Override
     public void onIngredientCardViewClicked(int position) {
-        Ingredient ingredient = mIngredientList.get(position);
+        Ingredient ingredient = ingredients.get(position);
         CreateIngredientDialog(ingredient, position);
     }
 }

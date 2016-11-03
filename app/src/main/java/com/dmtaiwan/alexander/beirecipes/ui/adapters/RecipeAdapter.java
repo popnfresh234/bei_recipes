@@ -136,7 +136,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 if (input.equals("")) {
                     input = "0";
                 }
-                listener.onRecyclerTextChanged(Double.parseDouble(input), getAdapterPosition());
+                //getAdapterPosition needs to be offset again to account for header row
+                listener.onRecyclerTextChanged(Double.parseDouble(input), getAdapterPosition()-1);
             }
         }
     }

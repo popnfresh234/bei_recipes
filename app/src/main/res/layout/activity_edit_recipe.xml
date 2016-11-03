@@ -4,7 +4,6 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <include layout="@layout/toolbar" />
 
     <!-- activity view -->
     <android.support.v4.widget.NestedScrollView
@@ -20,15 +19,17 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:orientation="vertical"
+            android:theme="@style/DarkOverlay"
             >
 
-            <TextView
+            <com.dmtaiwan.alexander.beirecipes.ui.views.BaselineGridTextView
+                style="@style/TextAppearance.GridPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_view_recipe_edit_title"
                 />
 
-            <EditText
+            <com.dmtaiwan.alexander.beirecipes.ui.views.FontEditText
                 android:id="@+id/edit_text_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,9 +40,12 @@
                 android:textColorHint="@color/app_compat_light_hint"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
-                android:inputType="textCapWords"/>
+                android:inputType="textCapWords"
+                android:theme="@style/BeiRecipe"
+                style="@style/TextAppearance.GeneralText"/>
 
-            <TextView
+            <com.dmtaiwan.alexander.beirecipes.ui.views.BaselineGridTextView
+                style="@style/TextAppearance.GridPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_view_margin_top"
@@ -55,6 +59,7 @@
                 android:visibility="gone" />
 
             <Button
+                style="@style/TextAppearance.GeneralText"
                 android:id="@+id/button_add_ingredient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,6 +70,7 @@
 
 
             <Button
+                style="@style/TextAppearance.GeneralText"
                 android:id="@+id/button_save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

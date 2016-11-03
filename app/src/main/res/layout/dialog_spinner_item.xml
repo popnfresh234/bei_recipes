@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/dialog_spinner_padding_left"
     android:textColor="@color/app_compat_light_hint"
-    android:textSize="@dimen/dialog_small_text"
+    android:textSize="@dimen/small_text"
     >
 
 </TextView>

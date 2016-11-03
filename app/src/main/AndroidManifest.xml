@@ -21,7 +21,8 @@
             android:name=".ui.RecipeActivity"
             android:theme="@style/BeiRecipe.RecipeAcivity"/>
 
-        <activity android:name=".ui.EditRecipeActivity"/>
+        <activity android:name=".ui.EditRecipeActivity"
+            android:theme="@style/BeiRecipe.EditRecipeAcivity"/>
     </application>
 
 </manifest>

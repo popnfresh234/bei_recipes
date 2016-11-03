@@ -22,9 +22,10 @@
     <color name="ripple_dark">@color/mid_grey</color>
     <color name="mid_grey">#40808080</color>
     <color name="dark_icon">#99000000</color> <!-- 60% black-->
+    <color name="button_color">#00ffd8</color>
 
     <!--ButtonColors for < 5.0-->
     <color name="PRESSED_STATE_COLOR">#ffd180</color>
     <color name="FOCUSED_STATE_COLOR">#F50056</color>
-    <color name="NORMAL_STATE_COLOR">#f57c00</color>
+    <color name="NORMAL_STATE_COLOR">@color/button_color</color>
 </resources>
