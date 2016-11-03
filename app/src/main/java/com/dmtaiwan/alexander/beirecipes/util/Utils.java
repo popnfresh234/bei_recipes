@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -35,8 +34,7 @@ public class Utils
 
     //formats numbers for display
     public static String formatNumber(double number) {
-        DecimalFormat decimalFormat = new DecimalFormat("0");
-        decimalFormat.setRoundingMode(RoundingMode.UP);
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
         return decimalFormat.format(number);
 
     }

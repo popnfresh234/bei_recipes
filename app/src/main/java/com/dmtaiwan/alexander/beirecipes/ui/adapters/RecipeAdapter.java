@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
 import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
+import com.dmtaiwan.alexander.beirecipes.util.Utils;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,7 +31,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<Ingredient> ingredients;
     private Activity hostActivity;
     private LayoutInflater layoutInflater;
-    private DecimalFormat mDecimalFormat = new DecimalFormat("0");
+
     private RecyclerTextChangedListener listener;
     private boolean onBind;
     private View emptyView;
@@ -96,10 +96,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         QuickLog.i(position);
         Ingredient ingredient = ingredients.get(position);
         holder.title.setText(ingredient.getName());
-        String formattedCount = mDecimalFormat.format(ingredient.getCount());
+        String formattedCount = Utils.formatNumber(ingredient.getCount());
         holder.count.setText(formattedCount);
         holder.units.setText(ingredient.getUnit());
-        String formattedProportialCount = mDecimalFormat.format(ingredient.getProportionalCount());
+        String formattedProportialCount = Utils.formatNumber(ingredient.getProportionalCount());
         onBind = true;
         holder.proportionalCount.setText(formattedProportialCount);
         onBind = false;
