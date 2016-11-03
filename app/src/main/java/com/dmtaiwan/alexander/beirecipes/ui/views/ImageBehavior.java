@@ -76,6 +76,7 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<CircleImageView> {
 
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, CircleImageView child, View dependency) {
+
         maybeInitProperties(child, dependency);
 
         final int maxScrollDistance = (int) (mStartToolbarPosition);
@@ -114,6 +115,7 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<CircleImageView> {
     }
 
     private void maybeInitProperties(CircleImageView child, View dependency) {
+
         if (mStartYPosition == 0)
             mStartYPosition = (int) (dependency.getY());
 
