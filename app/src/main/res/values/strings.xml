@@ -6,6 +6,7 @@
     <string name="text_view_ingredient_name">Name</string>
     <string name="text_view_ingredient_count">Count</string>
     <string name="text_view_ingredient_unit">Unit</string>
+    <string name="text_view_ingredient_fraction">Fraction</string>
     <string name="text_view_ingredient_proportion">Prop. Count</string>
     <string name="button_ok">OK</string>
     <string name="recipe_activity_empty_view">Add an ingredient!</string>
@@ -50,6 +51,16 @@
         <item>box</item>
         <item>stick</item>
         <item>(to taste)</item>
+    </string-array>
+
+    <string-array name="dialog_spinner_fractions">
+        <item>Fraction</item>
+        <item>⅛</item>
+        <item>¼</item>
+        <item>⅓</item>
+        <item>½</item>
+        <item>⅔</item>
+        <item>¾</item>
     </string-array>
 
 </resources>

@@ -67,6 +67,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
     private EditText dialogCountEditText;
     private EditText dialogIngredientNameEditText;
     private Spinner dialogUnitSpinner;
+    private Spinner dialogFractionSpinner;
     private Button dialogAddIngredientButton;
     private Button dialogCancelIngredientButton;
     private Button dialogRemoveIngredientButton;
@@ -141,6 +142,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
             newIngredient = true;
         } else {
             this.ingredient = ingredient;
+            newIngredient = false;
         }
 
         final Dialog dialog = new Dialog(context);
@@ -158,6 +160,20 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         dialogIngredientNameEditText = (EditText) dialog.findViewById(R.id.dialog_edit_text_ingredient_name);
         if (!newIngredient) {
             dialogIngredientNameEditText.setText(this.ingredient.getName());
+        }
+
+        //Setup fraction spinner
+        dialogFractionSpinner = (Spinner) dialog.findViewById(R.id.dialog_spinner_fractions);
+        ArrayAdapter<CharSequence> fractionSpinnerAdapter = ArrayAdapter.createFromResource(context, R.array.dialog_spinner_fractions, R.layout.dialog_spinner_item);
+        fractionSpinnerAdapter.setDropDownViewResource(R.layout.dialog_spinner_layout);
+        dialogFractionSpinner.setAdapter(fractionSpinnerAdapter);
+        if (!newIngredient && this.ingredient.getFraction() != null) {
+            String compareValue = this.ingredient.getFraction();
+            if (!compareValue.equals(null)) {
+                int spinnerPosition = fractionSpinnerAdapter.getPosition(compareValue);
+                dialogFractionSpinner.setSelection(spinnerPosition);
+                spinnerPosition = 0;
+            }
         }
 
         //Setup unit spinner
@@ -190,12 +206,24 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
                         EditRecipeActivity.this.ingredient.setCount(Double.valueOf(dialogCountEditText.getText().toString().trim()));
                     }
 
+
+                    //Fraction Spinner
+                    if (dialogFractionSpinner.getSelectedItemPosition() == 0) {
+                        EditRecipeActivity.this.ingredient.setFraction(null);
+                    }
+                    if (!dialogFractionSpinner.getSelectedItem().toString().equals(getResources().getStringArray(R.array.dialog_spinner_fractions)[0])) {
+                        EditRecipeActivity.this.ingredient.setFraction(dialogFractionSpinner.getSelectedItem().toString());
+                    }
+
+                    //Unit Spinner
                     if (dialogUnitSpinner.getSelectedItemPosition() == 0) {
                         EditRecipeActivity.this.ingredient.setUnit(null);
                     }
-                    if (!dialogUnitSpinner.getSelectedItem().toString().equals("Units")) {
+                    if (!dialogUnitSpinner.getSelectedItem().toString().equals(getResources().getStringArray(R.array.dialog_spinner_units)[0])) {
                         EditRecipeActivity.this.ingredient.setUnit(dialogUnitSpinner.getSelectedItem().toString());
                     }
+
+
                     if (!dialogIngredientNameEditText.getText().toString().equals("")) {
                         EditRecipeActivity.this.ingredient.setName(dialogIngredientNameEditText.getText().toString().toLowerCase().trim());
                     }

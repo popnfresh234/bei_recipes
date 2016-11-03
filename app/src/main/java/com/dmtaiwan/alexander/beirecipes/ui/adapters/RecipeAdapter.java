@@ -96,8 +96,20 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         QuickLog.i(position);
         Ingredient ingredient = ingredients.get(position);
         holder.title.setText(ingredient.getName());
+
+
+        //Get the count
+        String finalCount = "";
         String formattedCount = Utils.formatNumber(ingredient.getCount());
-        holder.count.setText(formattedCount);
+        String fraction = ingredient.getFraction();
+        if (formattedCount.equals("0") && fraction!= null) {
+            finalCount = fraction;
+        } else if (fraction != null) {
+            finalCount = formattedCount + fraction;
+        } else finalCount = formattedCount;
+
+
+        holder.count.setText(finalCount);
         holder.units.setText(ingredient.getUnit());
         String formattedProportialCount = Utils.formatNumber(ingredient.getProportionalCount());
         onBind = true;

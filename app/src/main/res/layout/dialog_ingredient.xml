@@ -27,6 +27,15 @@
             android:textColor="@color/app_compat_light_text"
             android:textColorHint="@color/app_compat_light_hint"/>
 
+        <Spinner
+            android:id="@+id/dialog_spinner_fractions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spinner_padding"
+            android:background="@android:color/white"
+            android:layout_weight="2"
+            />
+
 
         <Spinner
             android:id="@+id/dialog_spinner_units"
@@ -36,6 +45,8 @@
             android:background="@android:color/white"
             android:layout_weight="2"
             />
+
+
 
 
 

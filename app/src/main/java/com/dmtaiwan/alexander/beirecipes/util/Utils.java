@@ -34,7 +34,7 @@ public class Utils
 
     //formats numbers for display
     public static String formatNumber(double number) {
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        DecimalFormat decimalFormat = new DecimalFormat("0");
         return decimalFormat.format(number);
 
     }
