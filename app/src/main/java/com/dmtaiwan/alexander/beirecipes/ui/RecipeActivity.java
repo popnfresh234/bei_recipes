@@ -1,6 +1,7 @@
 package com.dmtaiwan.alexander.beirecipes.ui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,11 +11,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dmtaiwan.alexander.beirecipes.R;
@@ -66,6 +73,7 @@ public class RecipeActivity extends AppCompatActivity
     private RecipeAdapter adapter;
     private ArrayList<Recipe> recipes;
     private int recipePosition;
+    Spinner dialogFractionSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,27 +211,75 @@ public class RecipeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRecyclerTextChanged(double enteredValue, int position) {
+    public void onRecyclerTextChanged(int position) {
         //Get the list of ingredients
         List<Ingredient> ingredients = adapter.getData();
         //Get the ingredient being modified
         Ingredient testIngredient = ingredients.get(position);
-        //Calculate the ratio between the entered value and the orignal value
-        double ratio = enteredValue / testIngredient.getCount();
-        //Apply ratio to rest of values
-        for (int i = 0; i < ingredients.size(); i++) {
-            Ingredient ingredient = ingredients.get(i);
-            if (i == position) {
-                //If this is the positon the user set a vlaue for, no need to caluclate anything
-                ingredient.setProportionalCount(enteredValue);
-                ingredients.set(i, ingredient);
-            } else {
-                //Otherwise calculate ratio and set value
-                ingredient.setProportionalCount(ingredient.getCount() * ratio);
-                ingredients.set(i, ingredient);
-            }
-        }
+        createCountDialog(testIngredient, ingredients, position);
+//        //Calculate the ratio between the entered value and the orignal value
+//        double ratio = Utils.getRatio(enteredValue, testIngredient);
+//        //Apply ratio to rest of values
+//        for (int i = 0; i < ingredients.size(); i++) {
+//            Ingredient ingredient = ingredients.get(i);
+//            if (i == position) {
+//                //If this is the positon the user set a vlaue for, no need to caluclate anything
+//                ingredient.setProportionalCount(enteredValue);
+//                ingredients.set(i, ingredient);
+//            } else {
+//                //Otherwise calculate ratio and set value
+//                ingredient.setProportionalCount(ingredient.getCount() * ratio);
+//                ingredients.set(i, ingredient);
+//            }
+//        }
         //Finally, update the adapter with new data
-        adapter.setData(ingredients);
+
+    }
+
+    private void createCountDialog(final Ingredient ingredient, final List<Ingredient> ingredients, final int position) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_proportion);
+
+        //Setup edittext
+        final EditText dialogProportionEditText = (EditText) dialog.findViewById(R.id.dialog_proportion_edit_text_quantity);
+
+        //Setup fraction spinner
+        dialogFractionSpinner = (Spinner) dialog.findViewById(R.id.dialog_proportion_spinner_fractions);
+        ArrayAdapter<CharSequence> fractionSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.dialog_spinner_fractions, R.layout.dialog_spinner_item);
+        fractionSpinnerAdapter.setDropDownViewResource(R.layout.dialog_spinner_layout);
+        dialogFractionSpinner.setAdapter(fractionSpinnerAdapter);
+
+        //Setup cancel button
+        Button dialogCancelIngredientButton = (Button) dialog.findViewById(R.id.dialog_button_cancel);
+        dialogCancelIngredientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        //Setup OK button
+        Button dialogOkButton = (Button) dialog.findViewById(R.id.dialog_button_ok);
+        dialogOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Get the fractional value
+                double fraction = 0;
+                QuickLog.i(getResources().getStringArray(R.array.dialog_spinner_fractions)[0]);
+                if(!dialogFractionSpinner.getSelectedItem().toString().equals(getResources().getStringArray(R.array.dialog_spinner_fractions)[0])){
+                    QuickLog.i("WTF");
+                    double wtf = (float) 1.0d / 2.0d;
+                    Log.i("WTF", String.valueOf(wtf));
+                }
+                QuickLog.i(fraction);
+                dialog.dismiss();
+                adapter.setData(ingredients);
+                }
+
+
+        });
+
+        dialog.show();
     }
 }

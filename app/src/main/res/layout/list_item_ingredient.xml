@@ -22,6 +22,8 @@
         android:layout_weight="2"
         android:gravity="center_horizontal" />
 
+
+
     <com.dmtaiwan.alexander.beirecipes.ui.views.BaselineGridTextView
         style="@style/TextAppearance.GeneralText.Small"
         android:id="@+id/holder_units"
@@ -31,6 +33,7 @@
 
     <com.dmtaiwan.alexander.beirecipes.ui.views.FontEditText
         style="@style/TextAppearance.GeneralText"
+        android:focusable="false"
         android:id="@+id/holder_proportional_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

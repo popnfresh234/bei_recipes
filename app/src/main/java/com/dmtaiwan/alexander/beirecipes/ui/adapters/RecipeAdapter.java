@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -100,16 +99,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         //Get the count
         String finalCount = "";
-        String formattedCount = Utils.formatNumber(ingredient.getCount());
-        String fraction = ingredient.getFraction();
-        if (formattedCount.equals("0") && fraction!= null) {
-            finalCount = fraction;
-        } else if (fraction != null) {
-            finalCount = formattedCount + fraction;
-        } else finalCount = formattedCount;
+        double count = ingredient.getCount();
+        double wholeNumber = Utils.getWholeNumber(ingredient);
+        double fraction = Utils.getFractiun(ingredient);
+        finalCount = Utils.formatNumber(wholeNumber) + Utils.doubleToFraction(fraction);
+
 
 
         holder.count.setText(finalCount);
+
         holder.units.setText(ingredient.getUnit());
         String formattedProportialCount = Utils.formatNumber(ingredient.getProportionalCount());
         onBind = true;
@@ -131,25 +129,20 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @BindView(R.id.holder_proportional_count)
         EditText proportionalCount;
 
-        @BindView(R.id.holder_button_ok)
-        Button okButton;
 
         RecipeHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            okButton.setOnClickListener(this);
+            proportionalCount.setOnClickListener(this);
         }
 
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.holder_button_ok) {
-                String input = proportionalCount.getText().toString();
-                if (input.equals("")) {
-                    input = "0";
-                }
+            if (view.getId() == R.id.holder_proportional_count) {
+
                 //getAdapterPosition needs to be offset again to account for header row
-                listener.onRecyclerTextChanged(Double.parseDouble(input), getAdapterPosition()-1);
+                listener.onRecyclerTextChanged(getAdapterPosition()-1);
             }
         }
     }
@@ -175,7 +168,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public interface RecyclerTextChangedListener {
-        void onRecyclerTextChanged(double enteredValue, int position);
+        void onRecyclerTextChanged(int position);
     }
 
 }

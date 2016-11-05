@@ -39,7 +39,6 @@ import butterknife.ButterKnife;
 public class EditRecipeActivity extends AppCompatActivity implements EditIngredientAdapter.AdapterListener, View.OnClickListener {
 
 
-
     private Context context = this;
     private Recipe recipe;
     private Boolean newIngredient = false;
@@ -152,8 +151,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         //Setup EditTexts
         dialogCountEditText = (EditText) dialog.findViewById(R.id.dialog_edit_text_quantity);
         if (!newIngredient && this.ingredient.getCount() != 0) {
-            double quantity = ingredient.getCount();
-            String stringQuantity = Utils.formatNumber(quantity);
+            String stringQuantity = Utils.formatNumber(Utils.getWholeNumber(this.ingredient));
             dialogCountEditText.setText(stringQuantity);
         }
 
@@ -167,8 +165,10 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         ArrayAdapter<CharSequence> fractionSpinnerAdapter = ArrayAdapter.createFromResource(context, R.array.dialog_spinner_fractions, R.layout.dialog_spinner_item);
         fractionSpinnerAdapter.setDropDownViewResource(R.layout.dialog_spinner_layout);
         dialogFractionSpinner.setAdapter(fractionSpinnerAdapter);
-        if (!newIngredient && this.ingredient.getFraction() != null) {
-            String compareValue = this.ingredient.getFraction();
+        if (!newIngredient) {
+
+            //TODO get the non int value and convert to fraction
+            String compareValue = Utils.doubleToFraction(Utils.getFractiun(this.ingredient));
             if (!compareValue.equals(null)) {
                 int spinnerPosition = fractionSpinnerAdapter.getPosition(compareValue);
                 dialogFractionSpinner.setSelection(spinnerPosition);
@@ -198,22 +198,24 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
             @Override
             public void onClick(View v) {
                 newIngredient = false;
+                double count = 0;
                 imm.hideSoftInputFromWindow(dialogCountEditText.getWindowToken(), 0);
                 imm.hideSoftInputFromWindow(dialogIngredientNameEditText.getWindowToken(), 0);
                 if (!dialogIngredientNameEditText.getText().toString().equals("")) {
 
                     if (!dialogCountEditText.getText().toString().equals("")) {
-                        EditRecipeActivity.this.ingredient.setCount(Double.valueOf(dialogCountEditText.getText().toString().trim()));
+                        count = Double.valueOf(dialogCountEditText.getText().toString().trim());
                     }
 
 
                     //Fraction Spinner
-                    if (dialogFractionSpinner.getSelectedItemPosition() == 0) {
-                        EditRecipeActivity.this.ingredient.setFraction(null);
-                    }
+                    //TODO get non int value and convert to fraction
+
                     if (!dialogFractionSpinner.getSelectedItem().toString().equals(getResources().getStringArray(R.array.dialog_spinner_fractions)[0])) {
-                        EditRecipeActivity.this.ingredient.setFraction(dialogFractionSpinner.getSelectedItem().toString());
+                        double fraction = Utils.fractionToDouble(dialogFractionSpinner.getSelectedItem().toString());
+                        count = count + fraction;
                     }
+                    EditRecipeActivity.this.ingredient.setCount(count);
 
                     //Unit Spinner
                     if (dialogUnitSpinner.getSelectedItemPosition() == 0) {
@@ -315,7 +317,6 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         }
         finish();
     }
-
 
 
     @Override

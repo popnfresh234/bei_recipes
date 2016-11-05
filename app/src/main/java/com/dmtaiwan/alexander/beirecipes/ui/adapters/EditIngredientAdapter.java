@@ -83,8 +83,13 @@ public class EditIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         //Load values if not new ingredient
         if (ingredient.getCount() != 0) {
+            //Get the count
+            String finalCount = "";
             double count = ingredient.getCount();
-            holder.count.setText(Utils.formatNumber(count)+" ");
+            double wholeNumber = Utils.getWholeNumber(ingredient);
+            double fraction = Utils.getFractiun(ingredient);
+            finalCount = Utils.formatNumber(wholeNumber) + Utils.doubleToFraction(fraction);
+            holder.count.setText(finalCount+" ");
         }
 
         if (ingredient.getUnit() != null) {
