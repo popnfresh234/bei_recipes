@@ -151,7 +151,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         //Setup EditTexts
         dialogCountEditText = (EditText) dialog.findViewById(R.id.dialog_edit_text_quantity);
         if (!newIngredient && this.ingredient.getCount() != 0) {
-            String stringQuantity = Utils.formatNumber(Utils.getWholeNumber(this.ingredient));
+            String stringQuantity = Utils.formatNumber(Utils.getWholeNumber(this.ingredient.getCount()));
             dialogCountEditText.setText(stringQuantity);
         }
 
@@ -168,7 +168,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         if (!newIngredient) {
 
             //TODO get the non int value and convert to fraction
-            String compareValue = Utils.doubleToFraction(Utils.getFractiun(this.ingredient));
+            String compareValue = Utils.doubleToFraction(Utils.getFraction(this.ingredient.getCount()));
             if (!compareValue.equals(null)) {
                 int spinnerPosition = fractionSpinnerAdapter.getPosition(compareValue);
                 dialogFractionSpinner.setSelection(spinnerPosition);
@@ -209,7 +209,6 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
 
 
                     //Fraction Spinner
-                    //TODO get non int value and convert to fraction
 
                     if (!dialogFractionSpinner.getSelectedItem().toString().equals(getResources().getStringArray(R.array.dialog_spinner_fractions)[0])) {
                         double fraction = Utils.fractionToDouble(dialogFractionSpinner.getSelectedItem().toString());

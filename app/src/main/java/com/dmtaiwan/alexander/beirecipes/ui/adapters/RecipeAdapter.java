@@ -57,7 +57,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == VIEW_TYPE_REGULAR) {
             //Offset by one to account for header row
-            bindIngredientItem((RecipeHolder) holder, position-1);
+            bindIngredientItem((RecipeHolder) holder, position - 1);
         }
 
     }
@@ -67,7 +67,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemCount() {
         if (ingredients.size() > 0) {
             //Offset by one to account for header row
-            return ingredients.size()+1;
+            return ingredients.size() + 1;
         }
         //This handles the case of no ingredients, still want to display the header row
         else return 1;
@@ -100,19 +100,38 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         //Get the count
         String finalCount = "";
         double count = ingredient.getCount();
-        double wholeNumber = Utils.getWholeNumber(ingredient);
-        double fraction = Utils.getFractiun(ingredient);
+        double wholeNumber = Utils.getWholeNumber(count);
+        double fraction = Utils.getFraction(count);
         finalCount = Utils.formatNumber(wholeNumber) + Utils.doubleToFraction(fraction);
-
 
 
         holder.count.setText(finalCount);
 
         holder.units.setText(ingredient.getUnit());
-        String formattedProportialCount = Utils.formatNumber(ingredient.getProportionalCount());
+
+        String propFinalCount = "";
+        //Get proportional count
+        //Get the count
+        double propCount = ingredient.getProportionalCount();
+        if (propCount < 1) {
+            propFinalCount = Utils.doubleToFraction(Utils.getFraction(propCount));
+        } else {
+            double propWholeNumber = Utils.getWholeNumber(propCount);
+            double propFraction = Utils.getFraction(propCount);
+            if (propFraction == 0 && propWholeNumber == 0) {
+                propFinalCount = "0";
+            }
+            else if (propWholeNumber == 0) {
+                propFinalCount = Utils.doubleToFraction(propFraction);
+            } else {
+                propFinalCount = Utils.formatNumber(propWholeNumber) + Utils.doubleToFraction(propFraction);
+            }
+        }
+
         onBind = true;
-        holder.proportionalCount.setText(formattedProportialCount);
+        holder.proportionalCount.setText(propFinalCount);
         onBind = false;
+
     }
 
     public class RecipeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -142,7 +161,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             if (view.getId() == R.id.holder_proportional_count) {
 
                 //getAdapterPosition needs to be offset again to account for header row
-                listener.onRecyclerTextChanged(getAdapterPosition()-1);
+                listener.onRecyclerTextChanged(getAdapterPosition() - 1);
             }
         }
     }

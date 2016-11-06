@@ -86,8 +86,8 @@ public class EditIngredientAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             //Get the count
             String finalCount = "";
             double count = ingredient.getCount();
-            double wholeNumber = Utils.getWholeNumber(ingredient);
-            double fraction = Utils.getFractiun(ingredient);
+            double wholeNumber = Utils.getWholeNumber(count);
+            double fraction = Utils.getFraction(count);
             finalCount = Utils.formatNumber(wholeNumber) + Utils.doubleToFraction(fraction);
             holder.count.setText(finalCount+" ");
         }

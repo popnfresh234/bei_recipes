@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -137,7 +136,7 @@ public class RecipeActivity extends AppCompatActivity
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch(which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         //Write deleted recipe to file
                         Recipe recipe = recipes.get(recipePosition);
@@ -232,11 +231,11 @@ public class RecipeActivity extends AppCompatActivity
 //                ingredients.set(i, ingredient);
 //            }
 //        }
-        //Finally, update the adapter with new data
+        //Finally, upd¼ate the adapter with new data
 
     }
 
-    private void createCountDialog(final Ingredient ingredient, final List<Ingredient> ingredients, final int position) {
+    private void createCountDialog(final Ingredient testIngredient, final List<Ingredient> ingredients, final int position) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_proportion);
@@ -264,18 +263,33 @@ public class RecipeActivity extends AppCompatActivity
         dialogOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Get the fractional value
-                double fraction = 0;
-                QuickLog.i(getResources().getStringArray(R.array.dialog_spinner_fractions)[0]);
-                if(!dialogFractionSpinner.getSelectedItem().toString().equals(getResources().getStringArray(R.array.dialog_spinner_fractions)[0])){
-                    QuickLog.i("WTF");
-                    double wtf = (float) 1.0d / 2.0d;
-                    Log.i("WTF", String.valueOf(wtf));
+                double inputAmmount = 0;
+                if (!dialogProportionEditText.getText().toString().equals("")) {
+                    inputAmmount = Double.parseDouble(dialogProportionEditText.getText().toString());
                 }
-                QuickLog.i(fraction);
+
+                if (!dialogFractionSpinner.getSelectedItem().toString().equals(getResources().getStringArray(R.array.dialog_spinner_fractions)[0])) {
+                    double fraction = Utils.fractionToDouble(dialogFractionSpinner.getSelectedItem().toString());
+                    inputAmmount = inputAmmount + fraction;
+                }
+
+                //Calculate the ratio between the entered value and the orignal value
+                double ratio = inputAmmount / testIngredient.getCount();
+                for(int i = 0; i< ingredients.size(); i++) {
+                    Ingredient ingredient = ingredients.get(i);
+                    if (i != position) {
+                        ingredient.setProportionalCount(ingredient.getCount() * ratio);
+                        ingredients.set(i, ingredient);
+                    }else{
+                        ingredient.setProportionalCount(inputAmmount);
+                        ingredients.set(i, ingredient);
+                    }
+                }
+
+
                 dialog.dismiss();
                 adapter.setData(ingredients);
-                }
+            }
 
 
         });

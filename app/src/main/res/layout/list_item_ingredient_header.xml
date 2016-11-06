@@ -30,6 +30,7 @@
     <com.dmtaiwan.alexander.beirecipes.ui.views.BaselineGridTextView
         style="@style/TextAppearance.TinyText"
         android:layout_width="0dp"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:layout_weight="4"
         android:text="@string/text_view_ingredient_proportion"/>

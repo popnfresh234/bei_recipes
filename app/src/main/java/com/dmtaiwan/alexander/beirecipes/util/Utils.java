@@ -133,6 +133,9 @@ public class Utils {
         DecimalFormat format = new DecimalFormat("0.00");
         String formattedValue = format.format(value);
         switch (formattedValue) {
+            case "0.00":
+                fraction = "";
+                break;
             case "0.12":
                 fraction = "⅛";
                 break;
@@ -151,21 +154,23 @@ public class Utils {
             case "0.75":
                 fraction = "¾";
                 break;
+            default:
+                QuickLog.i(formattedValue);
+                fraction = formattedValue;
+                break;
 
         }
 
         return fraction;
     }
 
-    public static double getWholeNumber(Ingredient ingredient) {
-        double count = ingredient.getCount();
+    public static double getWholeNumber(double count) {
         double fraction = count % 1;
         double wholeNumber = count - fraction;
         return wholeNumber;
     }
 
-    public static double getFractiun(Ingredient ingredient) {
-        double count = ingredient.getCount();
+    public static double getFraction(double count) {
         double fraction = count % 1;
         return fraction;
     }
