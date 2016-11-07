@@ -190,4 +190,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void onRecyclerTextChanged(int position);
     }
 
+
+
 }

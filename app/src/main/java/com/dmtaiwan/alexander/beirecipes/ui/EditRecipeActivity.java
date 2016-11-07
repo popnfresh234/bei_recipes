@@ -2,7 +2,11 @@ package com.dmtaiwan.alexander.beirecipes.ui;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +25,8 @@ import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.EditIngredientAdapter;
 import com.dmtaiwan.alexander.beirecipes.ui.views.FontEditText;
+import com.dmtaiwan.alexander.beirecipes.util.PermissionUtil;
+import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
 import com.dmtaiwan.alexander.beirecipes.util.RecipeComparator;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 import com.google.gson.Gson;
@@ -48,9 +54,14 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
     private int recipePosition;
     private Boolean newRecipe;
 
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
 
     @BindView(R.id.button_add_ingredient)
     Button addIngredientButton;
+
+    @BindView(R.id.button_add_image)
+    Button addImageButton;
 
     @BindView(R.id.button_save)
     Button saveButton;
@@ -106,8 +117,9 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         adapter = new EditIngredientAdapter(this, this, ingredients);
         recyclerView.setAdapter(adapter);
 
-
+        //Setup listeners
         addIngredientButton.setOnClickListener(this);
+        addImageButton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
 
         //If position passed with intent, populate recipe
@@ -279,11 +291,27 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
             case R.id.button_save:
                 saveRecipes();
                 break;
+            case R.id.button_add_image:
+                //Check for permissions
+                if (PermissionUtil.checkPermissions(this)) {
+                    //Permissions have not been granted
+                    PermissionUtil.requestExternalStoragePermissions(EditRecipeActivity.this, coordinatorLayout);
+                } else {
+                    launchCamera();
+                }
+                break;
             case R.id.button_add_ingredient:
                 CreateIngredientDialog(null, -1);
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Utils.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            QuickLog.i("YAY");
         }
     }
 
@@ -334,5 +362,23 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
     public void onIngredientCardViewClicked(int position) {
         Ingredient ingredient = ingredients.get(position);
         CreateIngredientDialog(ingredient, position);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionUtil.REQUEST_STORAGE) {
+            QuickLog.i("Received respnse for Storage permission request");
+            //Check if all the permissions have been granted
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                launchCamera();
+            }
+        }else super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void launchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, Utils.REQUEST_IMAGE_CAPTURE);
+        }
     }
 }

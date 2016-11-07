@@ -30,12 +30,17 @@ public class Utils {
     public static final String EXTRA_RECIPE_POSITION = "com.dmtaiwan.alexander.extra.position";
     public static final String EXTRA_NEW_RECIPE = "com.dmtaiwan.alexander.extra.newrecipe";
 
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+
     public static final String FILE_NAME_RECIPES = "recipes.json";
 
     //formats numbers for display
     public static String formatNumber(double number) {
-        DecimalFormat decimalFormat = new DecimalFormat("#");
-        return decimalFormat.format(number);
+        if (number != 0) {
+            DecimalFormat decimalFormat = new DecimalFormat("#");
+            return decimalFormat.format(number);
+        } else return "";
+
 
     }
 

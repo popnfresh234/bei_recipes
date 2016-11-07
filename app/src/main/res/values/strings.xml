@@ -20,6 +20,7 @@
     <string name="hint_recipe_edit_title_hint">Enter Title</string>
     <string name="text_view_recipe_edit_ingredients_title">Ingredients</string>
     <string name="button_recipe_edit_add_ingredient">Add Ingredient</string>
+    <string name="button_recipe_edit_add_image">Add an Image</string>
     <string name="button_recipe_edit_save">Save</string>
     <string name="button_recipe_edit_up_arrow">↑</string>
 
@@ -63,4 +64,7 @@
         <item>¾</item>
     </string-array>
 
+    <!--Permissions-->
+    <string name="permission_rationale">Permissions are needed to write to external storage</string>
+    <string name="permission_ok">OK</string>
 </resources>
