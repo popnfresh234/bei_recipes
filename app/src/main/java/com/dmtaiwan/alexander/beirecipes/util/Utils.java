@@ -1,6 +1,7 @@
 package com.dmtaiwan.alexander.beirecipes.util;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
@@ -17,7 +18,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Alexander on 10/29/2016.
@@ -178,5 +181,20 @@ public class Utils {
     public static double getFraction(double count) {
         double fraction = count % 1;
         return fraction;
+    }
+
+    public static File getOutputMediaFile(){
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "Bei Recipes");
+
+        if (!mediaStorageDir.exists()){
+            if (!mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return new File(mediaStorageDir.getPath() + File.separator +
+                "IMG_"+ timeStamp + ".jpg");
     }
 }

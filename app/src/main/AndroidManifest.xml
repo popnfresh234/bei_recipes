@@ -28,6 +28,8 @@
 
         <activity android:name=".ui.EditRecipeActivity"
             android:theme="@style/BeiRecipe.EditRecipeAcivity"/>
+
+
     </application>
 
 </manifest>

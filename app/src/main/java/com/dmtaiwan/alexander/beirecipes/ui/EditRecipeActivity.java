@@ -3,6 +3,7 @@ package com.dmtaiwan.alexander.beirecipes.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -53,6 +54,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
     private ArrayList<Recipe> recipes;
     private int recipePosition;
     private Boolean newRecipe;
+    private Uri currentPhotoUri;
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
@@ -311,7 +313,9 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Utils.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            QuickLog.i("YAY");
+            //add to galley
+            galleryAddPic();
+
         }
     }
 
@@ -372,13 +376,27 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 launchCamera();
             }
-        }else super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        } else super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void launchCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            //Create file to store photo
+
+            currentPhotoUri = Uri.fromFile(Utils.getOutputMediaFile());
+
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoUri);
             startActivityForResult(takePictureIntent, Utils.REQUEST_IMAGE_CAPTURE);
         }
+
+
     }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        mediaScanIntent.setData(currentPhotoUri); //your file uri
+        this.sendBroadcast(mediaScanIntent);
+    }
+
 }
