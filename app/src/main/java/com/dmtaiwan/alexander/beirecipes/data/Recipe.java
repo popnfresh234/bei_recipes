@@ -19,7 +19,14 @@ public class Recipe implements Parcelable {
     public static Recipe newRecipe(String name) {
         Recipe recipe = new Recipe();
         recipe.name = name;
-        recipe.drawableId = 0;
+        recipe.imageUri = null;
+        recipe.id = UUID.randomUUID();
+        return recipe;
+    }
+
+    public static Recipe newRecipeWithoutData() {
+        Recipe recipe = new Recipe();
+        recipe.imageUri = null;
         recipe.id = UUID.randomUUID();
         return recipe;
     }
@@ -28,14 +35,14 @@ public class Recipe implements Parcelable {
         Recipe recipe = new Recipe();
         recipe.ingredients = ingredients;
         recipe.name = name;
-        recipe.drawableId = 0;
+        recipe.imageUri = null;
         recipe.id = UUID.randomUUID();
         return recipe;
     }
 
     private String name;
     private UUID id;
-    private int drawableId;
+    private String imageUri;
     private List<Ingredient> ingredients;
 
     public String getName() {
@@ -46,12 +53,13 @@ public class Recipe implements Parcelable {
         this.name = name;
     }
 
-    public int getDrawableId() {
-        return drawableId;
+
+    public String getImageUri() {
+        return imageUri;
     }
 
-    public void setDrawableId(int drawableId) {
-        this.drawableId = drawableId;
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     public List<Ingredient> getIngredients() {
@@ -66,10 +74,11 @@ public class Recipe implements Parcelable {
         return id;
     }
 
+
     protected Recipe(Parcel in) {
         name = in.readString();
         id = (UUID) in.readValue(UUID.class.getClassLoader());
-        drawableId = in.readInt();
+        imageUri = in.readString();
         if (in.readByte() == 0x01) {
             ingredients = new ArrayList<Ingredient>();
             in.readList(ingredients, Ingredient.class.getClassLoader());
@@ -87,7 +96,7 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeValue(id);
-        dest.writeInt(drawableId);
+        dest.writeString(imageUri);
         if (ingredients == null) {
             dest.writeByte((byte) (0x00));
         } else {

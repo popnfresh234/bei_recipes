@@ -177,9 +177,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void setData(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
         notifyDataSetChanged();
-        emptyView.setVisibility(ingredients.size() == 0 ? View.VISIBLE : View.GONE);
 
-        recycler.setVisibility(ingredients.size() == 0 ? View.GONE : View.VISIBLE);
+        emptyView.setVisibility(ingredients == null|| ingredients.size() == 0 ? View.VISIBLE : View.GONE);
+
+        recycler.setVisibility(ingredients == null || ingredients.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     public List<Ingredient> getData() {

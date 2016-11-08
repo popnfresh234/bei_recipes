@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -62,10 +63,10 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void bindRecipeItem(MainHolder holder, int position) {
         Recipe recipe = recipes.get(position);
         holder.recipeName.setText(recipe.getName());
-        if (recipe.getDrawableId() != 0) {
+        if (recipe.getImageUri() != null) {
             holder.recipeName.setVisibility(View.GONE);
             holder.recipeThumb.setVisibility(View.VISIBLE);
-            Picasso.with(hostActivity).load(recipe.getDrawableId()).fit().into(holder.recipeThumb);
+            Picasso.with(hostActivity).load(recipe.getImageUri()).memoryPolicy(MemoryPolicy.NO_CACHE).fit().into(holder.recipeThumb);
         } else {
             holder.recipeName.setVisibility(View.VISIBLE);
             holder.recipeThumb.setVisibility(View.INVISIBLE);

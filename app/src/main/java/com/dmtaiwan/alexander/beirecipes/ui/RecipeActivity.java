@@ -19,6 +19,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,12 +31,15 @@ import com.dmtaiwan.alexander.beirecipes.ui.adapters.RecipeAdapter;
 import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 import com.google.gson.Gson;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecipeActivity extends AppCompatActivity
         implements AppBarLayout.OnOffsetChangedListener, RecipeAdapter.RecyclerTextChangedListener {
@@ -56,6 +60,12 @@ public class RecipeActivity extends AppCompatActivity
 
     @BindView(R.id.sub_text_title)
     TextView subTitle;
+
+    @BindView(R.id.main_imageview_placeholder)
+    ImageView backgroundImage;
+
+    @BindView(R.id.imageview_circle)
+    CircleImageView circleImageView;
 
     @BindView(R.id.main_appbar)
     AppBarLayout appBarLayout;
@@ -99,6 +109,11 @@ public class RecipeActivity extends AppCompatActivity
             Recipe recipe = recipes.get(recipePosition);
             //Set the name of the recipe
             title.setText(recipe.getName());
+            if (recipe.getImageUri() != null) {
+                Picasso.with(this).load(recipe.getImageUri()).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.food).into(backgroundImage);
+                Picasso.with(this).load(recipe.getImageUri()).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.food
+                ).into(circleImageView);
+            }
             subTitle.setText(recipe.getName());
             List<Ingredient> ingredients = recipe.getIngredients();
             adapter.setData(ingredients);

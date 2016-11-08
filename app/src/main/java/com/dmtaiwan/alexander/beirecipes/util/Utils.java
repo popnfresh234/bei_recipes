@@ -18,9 +18,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Alexander on 10/29/2016.
@@ -183,7 +182,7 @@ public class Utils {
         return fraction;
     }
 
-    public static File getOutputMediaFile(){
+    public static File getOutputMediaFile(UUID uuid){
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "Bei Recipes");
 
@@ -192,9 +191,7 @@ public class Utils {
                 return null;
             }
         }
-
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         return new File(mediaStorageDir.getPath() + File.separator +
-                "IMG_"+ timeStamp + ".jpg");
+                "IMG_"+ uuid.toString() + ".jpg");
     }
 }

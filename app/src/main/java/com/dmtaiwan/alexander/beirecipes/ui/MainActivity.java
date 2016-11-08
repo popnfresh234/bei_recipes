@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
         super.onResume();
         //Get data
         QuickLog.i("onResume");
-
         Cookbook cookbook = Cookbook.get(this);
         recipes = cookbook.getRecipes();
         QuickLog.i(recipes.size());

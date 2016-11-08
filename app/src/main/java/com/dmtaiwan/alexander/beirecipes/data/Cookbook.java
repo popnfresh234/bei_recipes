@@ -2,7 +2,6 @@ package com.dmtaiwan.alexander.beirecipes.data;
 
 import android.content.Context;
 
-import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 
 import java.util.ArrayList;
@@ -56,9 +55,7 @@ public class Cookbook {
             //End dummy ingredient data
 
             recipeList.add(recipe);
-            if (i % 3 == 0) {
-                recipe.setDrawableId(R.drawable.food);
-            }
+
         }
         //End dummy recipe data
         return recipeList;

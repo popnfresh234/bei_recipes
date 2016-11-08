@@ -54,7 +54,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
     private ArrayList<Recipe> recipes;
     private int recipePosition;
     private Boolean newRecipe;
-    private Uri currentPhotoUri;
+    private Uri currentPhotoUri = null;
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
@@ -128,6 +128,9 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         if (recipePosition != -1) {
             Recipe recipe = recipes.get(recipePosition);
             populateRecipe(recipe);
+        }else{
+            //create a new recipe
+            recipe = Recipe.newRecipeWithoutData();
         }
     }
 
@@ -327,12 +330,19 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         if (!newRecipe) {
             recipe.setName(titleEditText.getText().toString());
             recipe.setIngredients(ingredients);
+            if (currentPhotoUri != null) {
+                recipe.setImageUri(currentPhotoUri.toString());
+            }
             recipes.set(recipePosition, recipe);
             Collections.sort(recipes, new RecipeComparator());
             jsonList = gson.toJson(recipes);
             Utils.writeDataUpdateCookbook(recipes, jsonList, this);
         } else if (recipes != null) {
-            recipe = Recipe.newRecipe(titleEditText.getText().toString(), ingredients);
+            recipe.setName(titleEditText.getText().toString());
+            recipe.setIngredients(ingredients);
+            if (currentPhotoUri != null) {
+                recipe.setImageUri(currentPhotoUri.toString());
+            }
             recipes.add(recipe);
             Collections.sort(recipes, new RecipeComparator());
             jsonList = gson.toJson(recipes);
@@ -340,7 +350,11 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         } else {
             //New Recipe
             recipes = new ArrayList<Recipe>();
-            recipe = Recipe.newRecipe(titleEditText.getText().toString(), ingredients);
+            recipe.setName(titleEditText.getText().toString());
+            recipe.setIngredients(ingredients);
+            if (currentPhotoUri != null) {
+                recipe.setImageUri(currentPhotoUri.toString());
+            }
             recipes.add(recipe);
             Collections.sort(recipes, new RecipeComparator());
             jsonList = gson.toJson(recipes);
@@ -383,9 +397,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             //Create file to store photo
-
-            currentPhotoUri = Uri.fromFile(Utils.getOutputMediaFile());
-
+            currentPhotoUri = Uri.fromFile(Utils.getOutputMediaFile(recipe.getId()));
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoUri);
             startActivityForResult(takePictureIntent, Utils.REQUEST_IMAGE_CAPTURE);
         }
