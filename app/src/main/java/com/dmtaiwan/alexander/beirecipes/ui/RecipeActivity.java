@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dmtaiwan.alexander.beirecipes.R;
+import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.RecipeAdapter;
@@ -102,9 +103,12 @@ public class RecipeActivity extends AppCompatActivity
         recycler.setAdapter(adapter);
         recycler.setHasFixedSize(true);
 
+        //Get the cookbook
+        Cookbook cookbook = Cookbook.get(this);
+        recipes = cookbook.getRecipes();
+
         //Get recipe this Activity was created with
         if (getIntent() != null) {
-            recipes = getIntent().getParcelableArrayListExtra(Utils.EXTRA_RECIPES);
             recipePosition = getIntent().getIntExtra(Utils.EXTRA_RECIPE_POSITION, 0);
             Recipe recipe = recipes.get(recipePosition);
             //Set the name of the recipe
@@ -130,7 +134,6 @@ public class RecipeActivity extends AppCompatActivity
                 switch (item.getItemId()) {
                     case R.id.action_edit:
                         Intent intent = new Intent(RecipeActivity.this, EditRecipeActivity.class);
-                        intent.putExtra(Utils.EXTRA_RECIPES, recipes);
                         intent.putExtra(Utils.EXTRA_RECIPE_POSITION, recipePosition);
                         intent.putExtra(Utils.EXTRA_NEW_RECIPE, false);
                         startActivity(intent);
@@ -231,23 +234,6 @@ public class RecipeActivity extends AppCompatActivity
         //Get the ingredient being modified
         Ingredient testIngredient = ingredients.get(position);
         createCountDialog(testIngredient, ingredients, position);
-//        //Calculate the ratio between the entered value and the orignal value
-//        double ratio = Utils.getRatio(enteredValue, testIngredient);
-//        //Apply ratio to rest of values
-//        for (int i = 0; i < ingredients.size(); i++) {
-//            Ingredient ingredient = ingredients.get(i);
-//            if (i == position) {
-//                //If this is the positon the user set a vlaue for, no need to caluclate anything
-//                ingredient.setProportionalCount(enteredValue);
-//                ingredients.set(i, ingredient);
-//            } else {
-//                //Otherwise calculate ratio and set value
-//                ingredient.setProportionalCount(ingredient.getCount() * ratio);
-//                ingredients.set(i, ingredient);
-//            }
-//        }
-        //Finally, upd¼ate the adapter with new data
-
     }
 
     private void createCountDialog(final Ingredient testIngredient, final List<Ingredient> ingredients, final int position) {

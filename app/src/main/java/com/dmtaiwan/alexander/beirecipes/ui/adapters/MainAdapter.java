@@ -66,7 +66,13 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (recipe.getImageUri() != null) {
             holder.recipeName.setVisibility(View.GONE);
             holder.recipeThumb.setVisibility(View.VISIBLE);
-            Picasso.with(hostActivity).load(recipe.getImageUri()).memoryPolicy(MemoryPolicy.NO_CACHE).fit().into(holder.recipeThumb);
+            Picasso.with(hostActivity)
+                    .load(recipe.getImageUri())
+
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .fit()
+                    .centerCrop()
+                    .into(holder.recipeThumb);
         } else {
             holder.recipeName.setVisibility(View.VISIBLE);
             holder.recipeThumb.setVisibility(View.INVISIBLE);

@@ -29,6 +29,7 @@
     <string name="hint_dialog_ingredient_quantity">Qty.</string>
     <string name="hint_dialog_ingredient_name">Ingredient Name</string>
     <string name="button_dialog_add">Add</string>
+    <string name="button_dialog_ok">OK</string>
     <string name="button_dialog_cancel">Cancel</string>
     <string name="button_dialog_remove">Remove</string>
     <string name="button_dialog_update">Update</string>

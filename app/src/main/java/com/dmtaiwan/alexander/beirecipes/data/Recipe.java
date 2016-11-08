@@ -63,7 +63,10 @@ public class Recipe implements Parcelable {
     }
 
     public List<Ingredient> getIngredients() {
-        return ingredients;
+        if (ingredients != null) {
+            return ingredients;
+        } else return new ArrayList<>();
+
     }
 
     public void setIngredients(List<Ingredient> ingredients) {

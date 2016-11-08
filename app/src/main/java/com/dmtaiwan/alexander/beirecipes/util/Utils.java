@@ -1,6 +1,7 @@
 package com.dmtaiwan.alexander.beirecipes.util;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
@@ -137,33 +138,33 @@ public class Utils {
 
     public static String doubleToFraction(double value) {
         String fraction = "";
-        DecimalFormat format = new DecimalFormat("0.00");
+        DecimalFormat format = new DecimalFormat(".00");
         String formattedValue = format.format(value);
         switch (formattedValue) {
-            case "0.00":
+            case ".00":
                 fraction = "";
                 break;
-            case "0.12":
+            case ".12":
                 fraction = "⅛";
                 break;
-            case "0.25":
+            case ".25":
                fraction = "¼";
                 break;
-            case "0.33":
+            case ".33":
                 fraction = "⅓";
                 break;
-            case "0.50":
+            case ".50":
                 fraction = "½";
                 break;
-            case "0.67":
+            case ".67":
                 fraction = "⅔";
                 break;
-            case "0.75":
+            case ".75":
                 fraction = "¾";
                 break;
             default:
-                QuickLog.i(formattedValue);
                 fraction = formattedValue;
+                QuickLog.i("FORMATTED VALUE" + formattedValue);
                 break;
 
         }
@@ -193,5 +194,28 @@ public class Utils {
         }
         return new File(mediaStorageDir.getPath() + File.separator +
                 "IMG_"+ uuid.toString() + ".jpg");
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

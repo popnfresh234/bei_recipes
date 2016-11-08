@@ -5,8 +5,6 @@ import android.content.Context;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Alexander on 11/1/2016.
@@ -31,35 +29,6 @@ public class Cookbook {
         return cookbook;
     }
 
-    private List<Recipe> getDummyData() {
-        //Dummy recipe data
-        List<Recipe> recipeList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            Recipe recipe = Recipe.newRecipe("This is recipe #" + String.valueOf(i));
-
-            //Dummy ingredient data
-            List<Ingredient> ingredients = new ArrayList<>();
-            for (int j = 0; j < 6; j++) {
-                Ingredient ingredient = new Ingredient();
-                ingredient.setName("Ingredient #" + String.valueOf(j));
-                double start = 0;
-                double end = 100;
-                double random = new Random().nextDouble();
-                double result = start + (random * (end - start));
-                ingredient.setCount(result);
-                ingredient.setUnit("mg");
-                ingredient.setProportionalCount(0);
-                ingredients.add(ingredient);
-            }
-            recipe.setIngredients(ingredients);
-            //End dummy ingredient data
-
-            recipeList.add(recipe);
-
-        }
-        //End dummy recipe data
-        return recipeList;
-    }
 
     private ArrayList<Recipe> getRecipesFromStorage(Context context) {
         if (Utils.doesRecipeFileExist(context)) {

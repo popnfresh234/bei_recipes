@@ -3,6 +3,10 @@ package com.dmtaiwan.alexander.beirecipes.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.dmtaiwan.alexander.beirecipes.R;
+import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
 import com.dmtaiwan.alexander.beirecipes.ui.adapters.EditIngredientAdapter;
@@ -32,6 +37,10 @@ import com.dmtaiwan.alexander.beirecipes.util.RecipeComparator;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,7 +97,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
     private InputMethodManager imm;
 
     //Setup ArrayList of Ingredients and Direction
-    private ArrayList<Ingredient> ingredients = null;
+    private List<Ingredient> ingredients = null;
 
 
     @Override
@@ -97,55 +106,54 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         setContentView(R.layout.activity_edit_recipe);
         ButterKnife.bind(this);
 
+        //Get recipes
+        Cookbook cookbook = Cookbook.get(this);
+        recipes = cookbook.getRecipes();
 
-        ingredients = new ArrayList<Ingredient>();
+
+        //Setup Recycler Views
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        adapter = new EditIngredientAdapter(this, this, null);
+        recyclerView.setAdapter(adapter);
 
         if (getIntent() != null) {
-            recipes = getIntent().getParcelableArrayListExtra(Utils.EXTRA_RECIPES);
             recipePosition = getIntent().getIntExtra(Utils.EXTRA_RECIPE_POSITION, -1);
             newRecipe = getIntent().getBooleanExtra(Utils.EXTRA_NEW_RECIPE, true);
+
+            //If position passed with intent, populate recipe
+            if (recipePosition != -1) {
+                recipe = recipes.get(recipePosition);
+                populateRecipe();
+            } else {
+                //create a new recipe
+                recipe = Recipe.newRecipeWithoutData();
+                ingredients = recipe.getIngredients();
+                adapter.setData(ingredients);
+            }
         }
 
         //Get input method manager
         imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
 
-        //Setup Recycler Views
-
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        adapter = new EditIngredientAdapter(this, this, ingredients);
-        recyclerView.setAdapter(adapter);
 
         //Setup listeners
         addIngredientButton.setOnClickListener(this);
         addImageButton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
 
-        //If position passed with intent, populate recipe
-        if (recipePosition != -1) {
-            Recipe recipe = recipes.get(recipePosition);
-            populateRecipe(recipe);
-        }else{
-            //create a new recipe
-            recipe = Recipe.newRecipeWithoutData();
-        }
+
     }
 
 
-    private void populateRecipe(Recipe recipe) {
-        this.recipe = recipe;
+    private void populateRecipe() {
         //Load Ingredients
-        List<Ingredient> tempIngredientList = recipe.getIngredients();
-        if (tempIngredientList.size() > 0) {
-            for (int i = 0; i < tempIngredientList.size(); i++) {
-                ingredients.add(tempIngredientList.get(i));
-            }
-            recyclerView.setVisibility(View.VISIBLE);
-            adapter.notifyDataSetChanged();
-        }
+        ingredients = recipe.getIngredients();
+        recyclerView.setVisibility(View.VISIBLE);
+        adapter.setData(ingredients);
         //Set Title
         titleEditText.setText(recipe.getName());
     }
@@ -184,7 +192,7 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         dialogFractionSpinner.setAdapter(fractionSpinnerAdapter);
         if (!newIngredient) {
 
-            //TODO get the non int value and convert to fraction
+
             String compareValue = Utils.doubleToFraction(Utils.getFraction(this.ingredient.getCount()));
             if (!compareValue.equals(null)) {
                 int spinnerPosition = fractionSpinnerAdapter.getPosition(compareValue);
@@ -223,8 +231,6 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
                     if (!dialogCountEditText.getText().toString().equals("")) {
                         count = Double.valueOf(dialogCountEditText.getText().toString().trim());
                     }
-
-
                     //Fraction Spinner
 
                     if (!dialogFractionSpinner.getSelectedItem().toString().equals(getResources().getStringArray(R.array.dialog_spinner_fractions)[0])) {
@@ -313,19 +319,11 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Utils.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //add to galley
-            galleryAddPic();
-
-        }
-    }
 
     private void saveRecipes() {
         Gson gson = new Gson();
         String jsonList = "";
-        //Save recipe here
+
         //Editing Recipe
         if (!newRecipe) {
             recipe.setName(titleEditText.getText().toString());
@@ -337,19 +335,8 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
             Collections.sort(recipes, new RecipeComparator());
             jsonList = gson.toJson(recipes);
             Utils.writeDataUpdateCookbook(recipes, jsonList, this);
-        } else if (recipes != null) {
-            recipe.setName(titleEditText.getText().toString());
-            recipe.setIngredients(ingredients);
-            if (currentPhotoUri != null) {
-                recipe.setImageUri(currentPhotoUri.toString());
-            }
-            recipes.add(recipe);
-            Collections.sort(recipes, new RecipeComparator());
-            jsonList = gson.toJson(recipes);
-            Utils.writeDataUpdateCookbook(recipes, jsonList, this);
         } else {
-            //New Recipe
-            recipes = new ArrayList<Recipe>();
+            //New recipe
             recipe.setName(titleEditText.getText().toString());
             recipe.setIngredients(ingredients);
             if (currentPhotoUri != null) {
@@ -401,13 +388,56 @@ public class EditRecipeActivity extends AppCompatActivity implements EditIngredi
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoUri);
             startActivityForResult(takePictureIntent, Utils.REQUEST_IMAGE_CAPTURE);
         }
-
-
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Utils.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            //scale down image
+            try {
+                Bitmap bitmap = rotateBitmapOrientation(Utils.getOutputMediaFile(recipe.getId()).toString());
+                bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 3, bitmap.getHeight() / 3, false);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                File f = Utils.getOutputMediaFile(recipe.getId());
+                FileOutputStream fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            galleryAddPic();
+
+        }
+    }
+
+    public Bitmap rotateBitmapOrientation(String photoFilePath) throws IOException {
+
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoFilePath, bounds);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(photoFilePath, opts);
+        // Read EXIF Data
+        ExifInterface exif = new ExifInterface(photoFilePath);
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        // Return result
+        return rotatedBitmap;
+    }
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        mediaScanIntent.setData(currentPhotoUri); //your file uri
+        mediaScanIntent.setData(currentPhotoUri);
         this.sendBroadcast(mediaScanIntent);
     }
 
