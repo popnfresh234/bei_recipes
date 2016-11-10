@@ -65,13 +65,12 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
         frameLayout.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
             @Override
             public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
-
                 // inset the toolbar down by the status bar height
                 ViewGroup.MarginLayoutParams lpToolbar = (ViewGroup.MarginLayoutParams) toolbar
                         .getLayoutParams();
-                lpToolbar.topMargin += insets.getSystemWindowInsetTop();
-                lpToolbar.leftMargin += insets.getSystemWindowInsetLeft();
-                lpToolbar.rightMargin += insets.getSystemWindowInsetRight();
+                lpToolbar.topMargin = insets.getSystemWindowInsetTop();
+                lpToolbar.leftMargin = insets.getSystemWindowInsetLeft();
+                lpToolbar.rightMargin = insets.getSystemWindowInsetRight();
                 toolbar.setLayoutParams(lpToolbar);
 
                 // inset the grid top by statusbar+toolbar & the bottom by the navbar (don't clip)
@@ -85,8 +84,8 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.Recyc
                 // inset the fab for the navbar
                 ViewGroup.MarginLayoutParams lpFab = (ViewGroup.MarginLayoutParams) fab
                         .getLayoutParams();
-                lpFab.bottomMargin += insets.getSystemWindowInsetBottom(); // portrait
-                lpFab.rightMargin += insets.getSystemWindowInsetRight(); // landscape
+                lpFab.bottomMargin = insets.getSystemWindowInsetBottom(); // portrait
+                lpFab.rightMargin = insets.getSystemWindowInsetRight(); // landscape
                 fab.setLayoutParams(lpFab);
 
                 // we place a background behind the status bar to combine with it's semi-transparent
