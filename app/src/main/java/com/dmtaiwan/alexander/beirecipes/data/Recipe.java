@@ -44,6 +44,7 @@ public class Recipe implements Parcelable {
     private UUID id;
     private String imageUri;
     private List<Ingredient> ingredients;
+    private List<Direction> directions;
 
     public String getName() {
         return name;
@@ -73,9 +74,20 @@ public class Recipe implements Parcelable {
         this.ingredients = ingredients;
     }
 
+    public List<Direction> getDirections() {
+        if (directions != null) {
+            return directions;
+        } else return new ArrayList<>();
+    }
+
+    public void setDirections(List<Direction> directions) {
+        this.directions = directions;
+    }
+
     public UUID getId() {
         return id;
     }
+
 
 
     protected Recipe(Parcel in) {
@@ -87,6 +99,12 @@ public class Recipe implements Parcelable {
             in.readList(ingredients, Ingredient.class.getClassLoader());
         } else {
             ingredients = null;
+        }
+        if (in.readByte() == 0x01) {
+            directions = new ArrayList<Direction>();
+            in.readList(directions, Direction.class.getClassLoader());
+        } else {
+            directions = null;
         }
     }
 
@@ -105,6 +123,12 @@ public class Recipe implements Parcelable {
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(ingredients);
+        }
+        if (directions == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(directions);
         }
     }
 

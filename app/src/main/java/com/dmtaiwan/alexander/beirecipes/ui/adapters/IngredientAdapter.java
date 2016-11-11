@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
  * Created by Alexander on 10/29/2016.
  */
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class IngredientAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_REGULAR = 1;
@@ -36,7 +36,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private View emptyView;
     private View recycler;
 
-    public RecipeAdapter(Activity hostActivity, RecyclerTextChangedListener listener, View emptyView, View recycler) {
+    public IngredientAdapter(Activity hostActivity, RecyclerTextChangedListener listener, View emptyView, View recycler) {
         this.layoutInflater = hostActivity.getLayoutInflater();
         this.hostActivity = hostActivity;
         this.listener = listener;

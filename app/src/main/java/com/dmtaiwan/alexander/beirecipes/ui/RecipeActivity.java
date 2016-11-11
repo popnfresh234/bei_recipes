@@ -26,9 +26,11 @@ import android.widget.TextView;
 
 import com.dmtaiwan.alexander.beirecipes.R;
 import com.dmtaiwan.alexander.beirecipes.data.Cookbook;
+import com.dmtaiwan.alexander.beirecipes.data.Direction;
 import com.dmtaiwan.alexander.beirecipes.data.Ingredient;
 import com.dmtaiwan.alexander.beirecipes.data.Recipe;
-import com.dmtaiwan.alexander.beirecipes.ui.adapters.RecipeAdapter;
+import com.dmtaiwan.alexander.beirecipes.ui.adapters.DirectionAdapter;
+import com.dmtaiwan.alexander.beirecipes.ui.adapters.IngredientAdapter;
 import com.dmtaiwan.alexander.beirecipes.util.QuickLog;
 import com.dmtaiwan.alexander.beirecipes.util.Utils;
 import com.google.gson.Gson;
@@ -43,7 +45,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecipeActivity extends AppCompatActivity
-        implements AppBarLayout.OnOffsetChangedListener, RecipeAdapter.RecyclerTextChangedListener {
+        implements AppBarLayout.OnOffsetChangedListener, IngredientAdapter.RecyclerTextChangedListener {
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -51,7 +53,8 @@ public class RecipeActivity extends AppCompatActivity
 
     private boolean mIsTheTitleVisible = false;
     private boolean mIsTheTitleContainerVisible = true;
-    private LinearLayoutManager llm;
+    private LinearLayoutManager ingredientLlm;
+    private LinearLayoutManager directionLlm;
 
     @BindView(R.id.main_linearlayout_title)
     LinearLayout titleContainer;
@@ -75,12 +78,16 @@ public class RecipeActivity extends AppCompatActivity
     Toolbar toolbar;
 
     @BindView(R.id.ingredient_recycler)
-    RecyclerView recycler;
+    RecyclerView ingredientRecycler;
+
+    @BindView(R.id.direction_recycler)
+    RecyclerView directionRecycler;
 
     @BindView(R.id.empty_view)
     TextView emptyView;
 
-    private RecipeAdapter adapter;
+    private IngredientAdapter ingredientAdapter;
+    private DirectionAdapter directionAdapter;
     private ArrayList<Recipe> recipes;
     private int recipePosition;
     Spinner dialogFractionSpinner;
@@ -95,13 +102,29 @@ public class RecipeActivity extends AppCompatActivity
         ButterKnife.bind(this);
         final QuickLog quickLog = QuickLog.newInstance("RecipeActivity");
 
-        //Set up the RecyclerView and Adapter
-        adapter = new RecipeAdapter(RecipeActivity.this, this, emptyView, recycler);
-        llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler.setLayoutManager(llm);
-        recycler.setAdapter(adapter);
-        recycler.setHasFixedSize(true);
+        //Set up the ingredient RecyclerView and Adapter
+        ingredientAdapter = new IngredientAdapter(RecipeActivity.this, this, emptyView, ingredientRecycler);
+        ingredientLlm = new LinearLayoutManager(this);
+        ingredientLlm.setOrientation(LinearLayoutManager.VERTICAL);
+        ingredientRecycler.setLayoutManager(ingredientLlm);
+        ingredientRecycler.setAdapter(ingredientAdapter);
+        ingredientRecycler.setHasFixedSize(true);
+
+        //Set up the direction RecyclerVie and Adapter
+        directionAdapter = new DirectionAdapter(this, null, directionRecycler);
+        directionLlm = new LinearLayoutManager(this);
+        directionLlm.setOrientation(LinearLayoutManager.VERTICAL);
+        directionRecycler.setLayoutManager(directionLlm);
+        directionRecycler.setAdapter(directionAdapter);
+        directionRecycler.setHasFixedSize(true);
+        //set dummy data
+        List<Direction> directions = new ArrayList<>();
+        for(int i = 0; i<5; i++) {
+            Direction direction = Direction.newDirection("THIS IS DIRECTION " + String.valueOf(i));
+            directions.add(direction);
+        }
+        directionAdapter.setData(directions);
+        //END DUMMY DATA
 
         //Get the cookbook
         Cookbook cookbook = Cookbook.get(this);
@@ -120,7 +143,7 @@ public class RecipeActivity extends AppCompatActivity
             }
             subTitle.setText(recipe.getName());
             List<Ingredient> ingredients = recipe.getIngredients();
-            adapter.setData(ingredients);
+            ingredientAdapter.setData(ingredients);
         }
 
         appBarLayout.addOnOffsetChangedListener(this);
@@ -230,7 +253,7 @@ public class RecipeActivity extends AppCompatActivity
     @Override
     public void onRecyclerTextChanged(int position) {
         //Get the list of ingredients
-        List<Ingredient> ingredients = adapter.getData();
+        List<Ingredient> ingredients = ingredientAdapter.getData();
         //Get the ingredient being modified
         Ingredient testIngredient = ingredients.get(position);
         createCountDialog(testIngredient, ingredients, position);
@@ -289,7 +312,7 @@ public class RecipeActivity extends AppCompatActivity
 
 
                 dialog.dismiss();
-                adapter.setData(ingredients);
+                ingredientAdapter.setData(ingredients);
             }
 
 

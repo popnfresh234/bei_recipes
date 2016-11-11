@@ -11,6 +11,7 @@
     <string name="text_view_ingredient_proportion">Prop. Count</string>
     <string name="button_ok">OK</string>
     <string name="recipe_activity_empty_view">Add an ingredient!</string>
+    <string name="recipe_activity_empty_view_direction">Add an direction!</string>
 
     <!--RecipeActivity Menu-->
     <string name="action_edit">Edit</string>
